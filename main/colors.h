@@ -27,5 +27,7 @@ rgb hsv2rgb(hsv in);
 
 void initColors();
 rgb getRainbowRGB();
+void setButtonLED(rgb buttonColor);
+void clearButtonLED();
 
 #endif //colors_h

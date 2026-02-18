@@ -121,4 +121,13 @@ rgb getRainbowRGB() {
   return hsv2rgb(currentColorHSV);
 }
 
+void setButtonLED(rgb buttonColor) {
+  Serial.printf("R: %3d, G: %3d, B: %3d, V: %3d\n", buttonColor.r, buttonColor.g, buttonColor.b, brightness);
+  analogWrite(RED_LED, buttonColor.r * brightness);
+  analogWrite(BLUE_LED, buttonColor.g * brightness);
+  analogWrite(GREEN_LED, buttonColor.b * brightness);
+}
+
+void clearButtonLED() {
+    setButtonLED({.r = 0.0, .g = 0.0, .b = 0.0});
 }
