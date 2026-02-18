@@ -4,8 +4,8 @@
 // Posted by David Hoerl, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-02-07, License - CC BY-SA 3.0
 
-int brightness = DEFAULT_BRIGHTNESS;
-int rainbowRate = DEFAULT_RAINBOW_RATE;
+static int brightness = DEFAULT_BRIGHTNESS;
+static int rainbowRate = DEFAULT_RAINBOW_RATE;
 
 hsv rgb2hsv(rgb in) {
   hsv out;
