@@ -2,7 +2,7 @@
 
 static unsigned char gameMode = GAME_MODE_OFF;
 
-void changeGameMode(unsigned char newGameMode) {
+void setGameMode(unsigned char newGameMode) {
   if (gameMode == newGameMode) {
     // TODO: Should this reset the game?
     return;

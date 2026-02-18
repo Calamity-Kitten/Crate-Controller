@@ -2,9 +2,9 @@
 #define colors_h
 
 #include <Arduino.h>
-#include "hardware.h"
+#include "config.h"
 
-#define DEFAULT_BRIGHTNESS 255
+#define DEFAULT_BRIGHTNESS 100
 #define DEFAULT_RAINBOW_RATE 50
 
 typedef struct {

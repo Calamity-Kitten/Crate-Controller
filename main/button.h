@@ -2,7 +2,7 @@
 #define button_h
 
 #include <Arduino.h>
-#include "hardware.h"
+#include "config.h"
 
 #define DEBOUNCE_TIME 100
 

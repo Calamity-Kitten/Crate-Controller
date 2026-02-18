@@ -15,6 +15,8 @@ void initHardware() {
   pinMode(BUTTON, INPUT_PULLUP);
   pinMode(KEYSWITCH, INPUT_PULLUP);
   pinMode(TOGGLESWITCH, INPUT_PULLUP);
+
+  Serial.begin(115200);
 }
 
 void toggleOutput(char outputPin) {
