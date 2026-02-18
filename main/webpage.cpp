@@ -11,7 +11,7 @@ void initWiFi() {
     Serial.print(".");
   }
 
-  Serial.printf("\nWiFi connected\nIP address: \n%s\n\n", WiFi.localIP().toString());asdf
+  Serial.printf("\nWiFi connected\nIP address: \n%s\n\n", WiFi.localIP().toString());
 
   if (!MDNS.begin("crate")) {
     Serial.println("Error setting up mDNS responder!");
