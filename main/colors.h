@@ -22,7 +22,6 @@ typedef struct {
 hsv rgb2hsv(rgb in);
 rgb hsv2rgb(hsv in);
 
-void initColors();
 rgb getRainbowRGB();
 void setButtonLED(rgb buttonColor);
 void clearButtonLED();

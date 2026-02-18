@@ -108,11 +108,6 @@ rgb hsv2rgb(hsv in) {
   return out;
 }
 
-// TODO: Load saved preferences
-void initColors() {
-  
-}
-
 rgb getRainbowRGB() {
   double hueValue = (double)((millis() / rainbowRate) % 360);
 
