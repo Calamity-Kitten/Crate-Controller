@@ -1,5 +1,6 @@
 #include "button.h"
 #include "colors.h"
+#include "game.h"
 #include "hardware.h"
 
 void setup() {
