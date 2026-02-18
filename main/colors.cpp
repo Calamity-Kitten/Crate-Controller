@@ -114,7 +114,6 @@ void initColors() {
 }
 
 rgb getRainbowRGB() {
-  Serial.printf("RanbowRate: %d, Brightness: %d", rainbowRate, brightness);
   double hueValue = (double)((millis() / rainbowRate) % 360);
 
   hsv currentColorHSV = {.h = (double)hueValue, .s = 1.0, .v = 1.0};
@@ -122,7 +121,6 @@ rgb getRainbowRGB() {
 }
 
 void setButtonLED(rgb buttonColor) {
-  Serial.printf("R: %3d, G: %3d, B: %3d, V: %3d\n", buttonColor.r, buttonColor.g, buttonColor.b, brightness);
   analogWrite(RED_LED, buttonColor.r * brightness);
   analogWrite(BLUE_LED, buttonColor.g * brightness);
   analogWrite(GREEN_LED, buttonColor.b * brightness);
