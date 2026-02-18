@@ -1,3 +1,4 @@
+#include "button.h"
 #include "colors.h"
 #include "hardware.h"
 
