@@ -1,7 +1,8 @@
 #ifndef colors_h
 #define colors_h
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include "hardware.h"
 
 #define DEFAULT_BRIGHTNESS 255
 #define DEFAULT_RAINBOW_RATE 50

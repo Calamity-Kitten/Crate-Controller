@@ -1,7 +1,7 @@
 #ifndef hardware_h
 #define hardware_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 // Output pins
 #define RED_LED 5

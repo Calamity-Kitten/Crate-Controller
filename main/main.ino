@@ -1,5 +1,5 @@
-#include "hardware.h"
 #include "colors.h"
+#include "hardware.h"
 
 void setup() {
   // put your setup code here, to run once:
