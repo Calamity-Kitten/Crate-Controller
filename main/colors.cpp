@@ -124,3 +124,11 @@ void setButtonLED(rgb buttonColor) {
 void clearButtonLED() {
     setButtonLED({.r = 0.0, .g = 0.0, .b = 0.0});
 }
+
+void setBrightness(unsigned char newBrightness) {
+  brightness = newBrightness;
+}
+
+unsigned char getBrightness() {
+  return brightness;
+}
