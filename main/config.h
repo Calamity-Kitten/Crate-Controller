@@ -6,4 +6,4 @@
 #include "secrets.h"
 #include "webpage.h"
 
-#define DEBUG true
+#define DEBUG false
