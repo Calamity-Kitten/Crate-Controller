@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "config.h"
 
-#define DEFAULT_BRIGHTNESS 100
+#define DEFAULT_BRIGHTNESS 255 // scale of 0 to 255
 #define DEFAULT_RAINBOW_RATE 50
 
 typedef struct {
@@ -25,5 +25,7 @@ rgb hsv2rgb(hsv in);
 rgb getRainbowRGB();
 void setButtonLED(rgb buttonColor);
 void clearButtonLED();
+void setBrightness(unsigned char newBrightness);
+unsigned char getBrightness();
 
 #endif //colors_h
