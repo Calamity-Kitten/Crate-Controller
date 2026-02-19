@@ -55,7 +55,7 @@ void setHandlers() {
 }
 
 void handleChangeBrightness(unsigned char newBrightness) {
-  Serial.println("Brightness change requested");
+  Serial.println("Brightness change requested: " + String(newBrightness));
   setBrightness(newBrightness);
   handleReadBrightness();
 }
