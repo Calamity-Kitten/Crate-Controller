@@ -42,6 +42,12 @@ void setHandlers() {
   });
   server.on(UriRegex("\/Brightness\/?"), handleGetBrightness);
 
+  server.on(UriRegex("\/MaximumTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
+    handleSetMaximumTime(server.pathArg(0).toInt());
+    if (DEBUG) Serial.printf(" - Maximum Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
+  });
+  server.on(UriRegex("\/MaximumTime\/?"), handleGetMaximumTime);
+
   server.on(UriRegex("\/MinimumTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
     handleSetMinimumTime(server.pathArg(0).toInt());
     if (DEBUG) Serial.printf(" - Minimum Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
@@ -63,6 +69,16 @@ void handleSetBrightness(unsigned char newBrightness) {
   if (DEBUG) Serial.println("Brightness change requested: " + String(newBrightness));
   setBrightness(newBrightness);
   handleGetBrightness();
+}
+
+void handleGetMaximumTime() {
+  server.send(200, "text/plain", String(getMaximumTime()));
+}
+
+void handleSetMaximumTime(unsigned int newMaximumTime) {
+  if (DEBUG) Serial.println("Maximum Time change requested: " + String(newMaximumTime));
+  setMaximumTime(newMaximumTime);
+  handleGetMaximumTime();
 }
 
 void handleGetMinimumTime() {

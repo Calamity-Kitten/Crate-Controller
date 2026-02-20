@@ -33,3 +33,15 @@ void setMinimumTime(unsigned int newMinimumTime) {
   
   minimumTime = newMinimumTime;
 }
+
+unsigned int getMaximumTime() {
+  Serial.printf(" - Maximum time: %d\n", maximumTime);
+  return maximumTime;
+}
+
+void setMaximumTime(unsigned int newMaximumTime) {
+  if (newMaximumTime < MAXIMUM_TIME_MIN) newMaximumTime = MAXIMUM_TIME_MIN;
+  else if (newMaximumTime > MAXIMUM_TIME_MAX) newMaximumTime = MAXIMUM_TIME_MAX;
+  
+  maximumTime = newMaximumTime;
+}

@@ -17,6 +17,8 @@ void setHandlers();
 
 void handleGetBrightness();
 void handleSetBrightness(unsigned char newBrightness);
+void handleGetMaximumTime();
+void handleSetMaximumTime(unsigned int newMaximumTime);
 void handleGetMinimumTime();
 void handleSetMinimumTime(unsigned int newMinimumTime);
 
