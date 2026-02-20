@@ -1,13 +1,14 @@
 var varBrightnessInput = document.getElementById("brightnessInput");
 var varMinimumTimeInput = document.getElementById("minimumTimeInput");
 var varMaximumTimeInput = document.getElementById("maximumTimeInput");
-var hostName = "http://192.168.5.246";
+
+var min2ms = 60 * 1000;
 
 function httpGet(theUrl)
 {
 	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-	xmlHttp.send( null );
+	xmlHttp.open("GET", theUrl, false); // false for synchronous request
+	xmlHttp.send(null);
 	return xmlHttp.responseText;
 }
 
@@ -16,55 +17,45 @@ function initSettings() {
 	getMinimumTimeValue();
 }
 
-function getBrightnessValue() {
-	console.log("Get brightness");
-	var request = httpGet("Brightness");
-	brightnessOutput.value = request;
-	varBrightnessInput.value = request;
+function getFieldValue(URI_name, inputField, outputField, saveFactor=1) {
+	var request = httpGet(URI_name) / saveFactor;
+	console.log("Get " + URI_name + ": " + request);
+	inputField.value = request;
+	outputField.value = request;
 	return request;
+}
+
+function setFieldValue(URI_name, inputField, outputField, saveFactor=1) {
+	var newVal = inputField.value * saveFactor;
+	var request = httpGet(URI_name + "/" + newVal) / saveFactor;
+	console.log("Set " + URI_name + ": " + inputField.value + " Return: " + request);
+	inputField.value = request;
+	outputField.value = request;
+	return request;
+}
+
+function getBrightnessValue() {
+	getFieldValue("Brightness", varBrightnessInput, brightnessOutput);
 }
 
 function setBrightnessValue() {
-	var newBrightness = varBrightnessInput.value;
-	var request = httpGet("Brightness/" + newBrightness);
-	console.log("Set brightness. Old: " + varBrightnessInput.value + " New: " + newBrightness + " Return: " + request);
-	brightnessOutput.value = request;
-	varBrightnessInput.value = request;
-	return request;
+	setFieldValue("Brightness", varBrightnessInput, brightnessOutput);
 }
 
 function getMaximumTimeValue() {
-	var request = httpGet("MaximumTime") / (60 * 1000);
-	console.log("Get Maximum Time: " + request);
-	maximumTimeOutput.value = request;
-	varMaximumTimeInput.value = request;
-	return request;
+	getFieldValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms);
 }
 
 function setMaximumTimeValue() {
-	var newMaximumTime = varMaximumTimeInput.value * 60 * 1000;
-	var request = httpGet("MaximumTime/" + newMaximumTime) / (60 * 1000);
-	console.log("Set Maximum Time. Old: " + varMaximumTimeInput.value + " New: " + newMaximumTime + "(" + varMaximumTimeInput.value + ") Return: " + request);
-	maximumTimeOutput.value = request;
-	varMaximumTimeInput.value = request;
-	return request;
+	setFieldValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
 }
 
 function getMinimumTimeValue() {
-	var request = httpGet("MinimumTime") / (60 * 1000);
-	console.log("Get Minimum Time: " + request);
-	minimumTimeOutput.value = request;
-	varMinimumTimeInput.value = request;
-	return request;
+	getFieldValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
 }
 
 function setMinimumTimeValue() {
-	var newMinimumTime = varMinimumTimeInput.value * 60 * 1000;
-	var request = httpGet("MinimumTime/" + newMinimumTime) / (60 * 1000);
-	console.log("Set Minimum Time. Old: " + varMinimumTimeInput.value + " New: " + newMinimumTime + "(" + varMinimumTimeInput.value + ") Return: " + request);
-	minimumTimeOutput.value = request;
-	varMinimumTimeInput.value = request;
-	return request;
+	setFieldValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
 }
 
 document.addEventListener("DOMContentLoaded", initSettings);
