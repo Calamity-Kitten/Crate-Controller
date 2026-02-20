@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "config.h"
 
-#define DEFAULT_BRIGHTNESS 255 // scale of 0 to 255
+#define DEFAULT_BRIGHTNESS 25 // scale of 0 to 255
 #define DEFAULT_RAINBOW_RATE 50
 
 typedef struct {

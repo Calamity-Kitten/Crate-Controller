@@ -148,7 +148,10 @@ void clearButtonLED() {
 }
 
 void setBrightness(unsigned char newBrightness) {
+  // no real need for sanity checking here since it's included in the setButtonLED function
+  if (DEBUG) Serial.printf("Old: %d, Target: %d ", brightness, newBrightness);
   brightness = newBrightness;
+  if (DEBUG) Serial.printf("New: %d\n", brightness);
 }
 
 unsigned char getBrightness() {
