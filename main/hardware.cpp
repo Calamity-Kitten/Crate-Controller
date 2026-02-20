@@ -17,10 +17,12 @@ void initHardware() {
   pinMode(TOGGLESWITCH, INPUT_PULLUP);
 
   Serial.begin(115200);
-  Serial.println("");
-  Serial.println("Hardware config complete");
-  Serial.printf("Reset reason: ");
-  if (DEBUG) verbose_print_reset_reason(esp_reset_reason());
+  if (DEBUG) {
+    Serial.println("");
+    Serial.println("Hardware config complete");
+    Serial.printf("Reset reason: ");
+    verbose_print_reset_reason(esp_reset_reason());
+  }
 }
 
 void toggleOutput(char outputPin) {

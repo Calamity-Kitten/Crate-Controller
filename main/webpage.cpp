@@ -36,26 +36,16 @@ void initWiFi() {
 
 void setHandlers() {
   server.on(UriRegex("\/brightness\/([0-9]+)\/?"), HTTP_GET, [&]() {
-    int intNewBrightness = server.pathArg(0).toInt();
-    if (server.pathArg(0).toInt() < 0) intNewBrightness = 0;
-    else if (server.pathArg(0).toInt() > 255) intNewBrightness = 255;
-    
-    handleChangeBrightness(intNewBrightness);
-    Serial.println(" - Brightness change complete: " + String(intNewBrightness));
-    Serial.println();
+    handleChangeBrightness((unsigned char)server.pathArg(0).toInt());
+    if (DEBUG) Serial.printf(" - Brightness change complete: %s\n\n", String(server.pathArg(0).toInt()));
   });
   server.on(UriRegex("\/brightness\/?"), HTTP_GET, [&]() {
     handleReadBrightness();
   });
 
-  server.on(UriRegex("/home/([0-9]+)/second"), HTTP_GET, [&]() {
-    server.send(200, "text/plain", "Hello from second! URL arg: " + server.pathArg(0));
-  });
-
-  server.on("/", handleRoot);
+  server.serveStatic("/", LittleFS, "/settings.html");
   server.serveStatic("/style.css", LittleFS, "/style.css");
-  server.serveStatic("/test_file.html", LittleFS, "/test_file.html");
-  server.serveStatic("/index.html", LittleFS, "/index.html");
+  server.serveStatic("/settings.js", LittleFS, "/settings.js");
   
   server.onNotFound(handleNotFound);
 }
@@ -72,10 +62,6 @@ void handleReadBrightness() {
 
 void updateWiFi() {
   server.handleClient();
-}
-
-void handleRoot() {
-  server.send(200, "text/html", "Hello, world!");
 }
 
 void handleNotFound() {

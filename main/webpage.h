@@ -16,7 +16,6 @@ void updateWiFi();
 void setHandlers();
 void handleChangeBrightness(unsigned char newBrightness);
 void handleReadBrightness();
-void handleRoot();
 void handleNotFound();
 
 #endif
