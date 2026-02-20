@@ -54,6 +54,12 @@ void setHandlers() {
   });
   server.on(UriRegex("\/MinimumTime\/?"), handleGetMinimumTime);
 
+  server.on(UriRegex("\/StaticTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
+    handleSetStaticTime(server.pathArg(0).toInt());
+    if (DEBUG) Serial.printf(" - Static Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
+  });
+  server.on(UriRegex("\/StaticTime\/?"), handleGetStaticTime);
+
   server.serveStatic("/", LittleFS, "/settings.html");
   server.serveStatic("/style.css", LittleFS, "/style.css");
   server.serveStatic("/settings.js", LittleFS, "/settings.js");
@@ -89,6 +95,16 @@ void handleSetMinimumTime(unsigned int newMinimumTime) {
   if (DEBUG) Serial.println("Minimum Time change requested: " + String(newMinimumTime));
   setMinimumTime(newMinimumTime);
   handleGetMinimumTime();
+}
+
+void handleGetStaticTime() {
+  server.send(200, "text/plain", String(getStaticTime()));
+}
+
+void handleSetStaticTime(unsigned int newStaticTime) {
+  if (DEBUG) Serial.println("Static Time change requested: " + String(newStaticTime));
+  setStaticTime(newStaticTime);
+  handleGetStaticTime();
 }
 
 void updateWiFi() {

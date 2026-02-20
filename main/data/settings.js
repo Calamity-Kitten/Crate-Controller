@@ -1,6 +1,7 @@
 var varBrightnessInput = document.getElementById("brightnessInput");
 var varMinimumTimeInput = document.getElementById("minimumTimeInput");
 var varMaximumTimeInput = document.getElementById("maximumTimeInput");
+var varStaticTimeInput = document.getElementById("staticTimeInput");
 
 var min2ms = 60 * 1000;
 
@@ -15,6 +16,13 @@ function httpGet(theUrl)
 function initSettings() {
 	getBrightnessValue();
 	getMinimumTimeValue();
+	getMaximumTimeValue();
+	getStaticTimeValue();
+
+	var settings = document.querySelectorAll('.setting')//.style.display = 'block';
+	for(var i = 0; i < settings.length; i++) {
+		settings[i].style.display = 'block';
+	}
 }
 
 function getFieldValue(URI_name, inputField, outputField, saveFactor=1) {
@@ -58,8 +66,17 @@ function setMinimumTimeValue() {
 	setFieldValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
 }
 
+function getStaticTimeValue() {
+	getFieldValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
+}
+
+function setStaticTimeValue() {
+	setFieldValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
+}
+
 document.addEventListener("DOMContentLoaded", initSettings);
 
 varBrightnessInput.addEventListener('input', setBrightnessValue);
 varMinimumTimeInput.addEventListener('input', setMinimumTimeValue);
 varMaximumTimeInput.addEventListener('input', setMaximumTimeValue);
+varStaticTimeInput.addEventListener('input', setStaticTimeValue);

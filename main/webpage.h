@@ -21,6 +21,8 @@ void handleGetMaximumTime();
 void handleSetMaximumTime(unsigned int newMaximumTime);
 void handleGetMinimumTime();
 void handleSetMinimumTime(unsigned int newMinimumTime);
+void handleGetStaticTime();
+void handleSetStaticTime(unsigned int newStaticTime);
 
 void handleNotFound();
 
