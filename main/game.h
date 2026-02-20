@@ -7,7 +7,15 @@
 #define GAME_MODE_OFF 0
 #define GAME_MODE_BASIC 1
 
+#define DEFAULT_MINIMUM_TIME 300000 // Five Minutes
+#define DEFAULT_MAXIMUM_TIME 600000 // Ten Minutes
+#define MINIMUM_TIME_MIN 60000 // Five Minutes
+#define MINIMUM_TIME_MAX 900000 // Fifteen Minutes
+
 void setGameMode(unsigned char newGameMode);
 void updateGame();
+
+unsigned int getMinimumTime();
+void setMinimumTime(unsigned int newMinimumTime);
 
 #endif

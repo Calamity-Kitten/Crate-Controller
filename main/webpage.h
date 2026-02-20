@@ -14,8 +14,12 @@ void initWiFi();
 void updateWiFi();
 
 void setHandlers();
-void handleChangeBrightness(unsigned char newBrightness);
-void handleReadBrightness();
+
+void handleGetBrightness();
+void handleSetBrightness(unsigned char newBrightness);
+void handleGetMinimumTime();
+void handleSetMinimumTime(unsigned int newMinimumTime);
+
 void handleNotFound();
 
 #endif

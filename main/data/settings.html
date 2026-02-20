@@ -11,8 +11,14 @@
 
 	<div class="setting" id="slider">
 		<label>Brightness:</label>
-		<input type="range" id="brightnessInput" min="25" max="255" value="1"/>
+		<input type="range" id="brightnessInput" min="25" max="255" value="100">
 		<output id="brightnessOutput">1</output>
+	</div>
+
+	<div class="setting" id="slider">
+		<label>Minimum wait time:</label>
+		<input type="range" id="minimumTimeInput" min="1" max="15" value="1">
+		<output id="minimumTimeOutput">1</output>
 	</div>
 
 	<script src="settings.js" defer></script>

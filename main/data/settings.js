@@ -1,4 +1,5 @@
 var varBrightnessInput = document.getElementById("brightnessInput");
+var varMinimumTimeInput = document.getElementById("minimumTimeInput");
 var hostName = "http://192.168.5.246";
 
 function httpGet(theUrl)
@@ -9,8 +10,14 @@ function httpGet(theUrl)
 	return xmlHttp.responseText;
 }
 
+function initSettings() {
+	getBrightnessValue();
+	getMinimumTimeValue();
+}
+
 function getBrightnessValue() {
-	var request = httpGet("brightness");
+	console.log("Get brightness");
+	var request = httpGet("Brightness");
 	brightnessOutput.value = request;
 	varBrightnessInput.value = request;
 	return request;
@@ -18,13 +25,31 @@ function getBrightnessValue() {
 
 function setBrightnessValue() {
 	var newBrightness = varBrightnessInput.value;
-	var request = httpGet("brightness/" + newBrightness);
+	var request = httpGet("Brightness/" + newBrightness);
+	console.log("Set brightness. Old: " + varBrightnessInput.value + " New: " + newBrightness + " Return: " + request);
 	brightnessOutput.value = request;
 	varBrightnessInput.value = request;
 	return request;
 }
 
-document.addEventListener("DOMContentLoaded", getBrightnessValue);
+function getMinimumTimeValue() {
+	var request = httpGet("MinimumTime") / (60 * 1000);
+	console.log("Get Minimum Time: " + request);
+	minimumTimeOutput.value = request;
+	varMinimumTimeInput.value = request;
+	return request;
+}
 
-varBrightnessInput
-	.addEventListener('input', setBrightnessValue);
+function setMinimumTimeValue() {
+	var newMinimumTime = varMinimumTimeInput.value * 60 * 1000;
+	var request = httpGet("MinimumTime/" + newMinimumTime) / (60 * 1000);
+	console.log("Set Minimum Time. Old: " + varMinimumTimeInput.value + " New: " + newMinimumTime + "(" + varMinimumTimeInput.value + ") Return: " + request);
+	minimumTimeOutput.value = request;
+	varMinimumTimeInput.value = request;
+	return request;
+}
+
+document.addEventListener("DOMContentLoaded", initSettings);
+
+varBrightnessInput.addEventListener('input', setBrightnessValue);
+varMinimumTimeInput.addEventListener('input', setMinimumTimeValue);

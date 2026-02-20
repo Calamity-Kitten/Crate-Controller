@@ -1,7 +1,5 @@
 #include "webpage.h"
 
-
-
 WebServer server(80);
 
 void initWiFi() {
@@ -35,13 +33,20 @@ void initWiFi() {
 }
 
 void setHandlers() {
-  server.on(UriRegex("\/brightness\/([0-9]+)\/?"), HTTP_GET, [&]() {
-    handleChangeBrightness((unsigned char)server.pathArg(0).toInt());
+  server.on(UriRegex("\/Brightness\/([0-9]+)\/?$"), HTTP_GET, [&]() {
+    unsigned char newBrightness = server.pathArg(0).toInt();
+    if (server.pathArg(0).toInt() > 255) newBrightness = 255;
+    else if (server.pathArg(0).toInt() < 0) newBrightness = 0;
+    handleSetBrightness(server.pathArg(0).toInt());
     if (DEBUG) Serial.printf(" - Brightness change complete: %s\n\n", String(server.pathArg(0).toInt()));
   });
-  server.on(UriRegex("\/brightness\/?"), HTTP_GET, [&]() {
-    handleReadBrightness();
+  server.on(UriRegex("\/Brightness\/?"), handleGetBrightness);
+
+  server.on(UriRegex("\/MinimumTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
+    handleSetMinimumTime(server.pathArg(0).toInt());
+    if (DEBUG) Serial.printf(" - Minimum Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
   });
+  server.on(UriRegex("\/MinimumTime\/?"), handleGetMinimumTime);
 
   server.serveStatic("/", LittleFS, "/settings.html");
   server.serveStatic("/style.css", LittleFS, "/style.css");
@@ -50,14 +55,24 @@ void setHandlers() {
   server.onNotFound(handleNotFound);
 }
 
-void handleChangeBrightness(unsigned char newBrightness) {
-  Serial.println("Brightness change requested: " + String(newBrightness));
-  setBrightness(newBrightness);
-  handleReadBrightness();
+void handleGetBrightness() {
+  server.send(200, "text/plain", String(getBrightness()));
 }
 
-void handleReadBrightness() {
-  server.send(200, "text/plain", String(getBrightness()));
+void handleSetBrightness(unsigned char newBrightness) {
+  if (DEBUG) Serial.println("Brightness change requested: " + String(newBrightness));
+  setBrightness(newBrightness);
+  handleGetBrightness();
+}
+
+void handleGetMinimumTime() {
+  server.send(200, "text/plain", String(getMinimumTime()));
+}
+
+void handleSetMinimumTime(unsigned int newMinimumTime) {
+  if (DEBUG) Serial.println("Minimum Time change requested: " + String(newMinimumTime));
+  setMinimumTime(newMinimumTime);
+  handleGetMinimumTime();
 }
 
 void updateWiFi() {
