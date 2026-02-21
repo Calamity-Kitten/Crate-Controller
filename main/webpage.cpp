@@ -60,6 +60,12 @@ void setHandlers() {
   });
   server.on(UriRegex("\/StaticTime\/?"), handleGetStaticTime);
 
+  server.on(UriRegex("\/GameMode\/([0-9]+)\/?$"), HTTP_GET, [&]() {
+    handleSetGameMode(server.pathArg(0).toInt());
+    if (DEBUG) Serial.printf(" - Game Mode change complete: %s\n\n", String(server.pathArg(0).toInt()));
+  });
+  server.on(UriRegex("\/GameMode\/?"), handleGetGameMode);
+
   server.serveStatic("/", LittleFS, "/settings.html");
   server.serveStatic("/style.css", LittleFS, "/style.css");
   server.serveStatic("/settings.js", LittleFS, "/settings.js");
@@ -105,6 +111,16 @@ void handleSetStaticTime(unsigned int newStaticTime) {
   if (DEBUG) Serial.println("Static Time change requested: " + String(newStaticTime));
   setStaticTime(newStaticTime);
   handleGetStaticTime();
+}
+
+void handleGetGameMode() {
+  server.send(200, "text/plain", String(getGameMode()));
+}
+
+void handleSetGameMode(unsigned char newGameMode) {
+  if (DEBUG) Serial.println("Game Mode change requested: " + String(newGameMode));
+  setGameMode(newGameMode);
+  handleGetGameMode();
 }
 
 void updateWiFi() {

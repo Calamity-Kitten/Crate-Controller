@@ -23,6 +23,8 @@ void handleGetMinimumTime();
 void handleSetMinimumTime(unsigned int newMinimumTime);
 void handleGetStaticTime();
 void handleSetStaticTime(unsigned int newStaticTime);
+void handleGetGameMode();
+void handleSetGameMode(unsigned char newGameMode);
 
 void handleNotFound();
 

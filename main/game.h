@@ -5,7 +5,8 @@
 #include "config.h"
 
 #define GAME_MODE_OFF 0
-#define GAME_MODE_BASIC 1
+#define GAME_MODE_BASIC_STATIC 1
+#define GAME_MODE_BASIC_RANDOM 2
 
 #define DEFAULT_MINIMUM_TIME 300000 // Five Minutes
 #define MINIMUM_TIME_MIN 60000 // One minute
@@ -19,7 +20,7 @@
 #define STATIC_TIME_MIN 60000
 #define STATIC_TIME_MAX 900000
 
-
+unsigned char getGameMode();
 void setGameMode(unsigned char newGameMode);
 void updateGame();
 

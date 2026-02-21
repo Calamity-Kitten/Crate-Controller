@@ -5,7 +5,7 @@ void setup() {
   initHardware();
   initWiFi();
 
-  setGameMode(GAME_MODE_BASIC);
+  setGameMode(GAME_MODE_BASIC_STATIC);
 }
 
 void loop() {

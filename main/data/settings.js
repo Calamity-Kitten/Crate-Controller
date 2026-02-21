@@ -2,11 +2,11 @@ var varBrightnessInput = document.getElementById("brightnessInput");
 var varMinimumTimeInput = document.getElementById("minimumTimeInput");
 var varMaximumTimeInput = document.getElementById("maximumTimeInput");
 var varStaticTimeInput = document.getElementById("staticTimeInput");
+var varGameModeInput = document.getElementById("gameModeInput");
 
 var min2ms = 60 * 1000;
 
-function httpGet(theUrl)
-{
+function httpGet(theUrl) {
 	var xmlHttp = new XMLHttpRequest();
 	xmlHttp.open("GET", theUrl, false); // false for synchronous request
 	xmlHttp.send(null);
@@ -25,7 +25,22 @@ function initSettings() {
 	}
 }
 
-function getFieldValue(URI_name, inputField, outputField, saveFactor=1) {
+function getSelectValue(URI_name, inputField) {
+	var request = httpGet(URI_name);
+	console.log("Get " + URI_name + ": " + request);
+	inputField.value = request;
+	return request;
+}
+
+function setSelectValue(URI_name, inputField) {
+	var newVal = inputField.value;
+	var request = httpGet(URI_name + "/" + newVal);
+	console.log("Set " + URI_name + ": " + inputField.value + " Return: " + request);
+	inputField.value = request;
+	return request;
+}
+
+function getRangeValue(URI_name, inputField, outputField, saveFactor=1) {
 	var request = httpGet(URI_name) / saveFactor;
 	console.log("Get " + URI_name + ": " + request);
 	inputField.value = request;
@@ -33,7 +48,7 @@ function getFieldValue(URI_name, inputField, outputField, saveFactor=1) {
 	return request;
 }
 
-function setFieldValue(URI_name, inputField, outputField, saveFactor=1) {
+function setRangeValue(URI_name, inputField, outputField, saveFactor=1) {
 	var newVal = inputField.value * saveFactor;
 	var request = httpGet(URI_name + "/" + newVal) / saveFactor;
 	console.log("Set " + URI_name + ": " + inputField.value + " Return: " + request);
@@ -43,35 +58,43 @@ function setFieldValue(URI_name, inputField, outputField, saveFactor=1) {
 }
 
 function getBrightnessValue() {
-	getFieldValue("Brightness", varBrightnessInput, brightnessOutput);
+	getRangeValue("Brightness", varBrightnessInput, brightnessOutput);
 }
 
 function setBrightnessValue() {
-	setFieldValue("Brightness", varBrightnessInput, brightnessOutput);
+	setRangeValue("Brightness", varBrightnessInput, brightnessOutput);
 }
 
 function getMaximumTimeValue() {
-	getFieldValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms);
+	getRangeValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms);
 }
 
 function setMaximumTimeValue() {
-	setFieldValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
+	setRangeValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
 }
 
 function getMinimumTimeValue() {
-	getFieldValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
+	getRangeValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
 }
 
 function setMinimumTimeValue() {
-	setFieldValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
+	setRangeValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
 }
 
 function getStaticTimeValue() {
-	getFieldValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
+	getRangeValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
 }
 
 function setStaticTimeValue() {
-	setFieldValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
+	setRangeValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
+}
+
+function getGameModeValue() {
+	getSelectValue("GameMode", varGameModeInput);
+}
+
+function setGameModeValue() {
+	setSelectValue("GameMode", varGameModeInput);
 }
 
 document.addEventListener("DOMContentLoaded", initSettings);
@@ -80,3 +103,4 @@ varBrightnessInput.addEventListener('input', setBrightnessValue);
 varMinimumTimeInput.addEventListener('input', setMinimumTimeValue);
 varMaximumTimeInput.addEventListener('input', setMaximumTimeValue);
 varStaticTimeInput.addEventListener('input', setStaticTimeValue);
+varGameModeInput.addEventListener('input', setGameModeValue);

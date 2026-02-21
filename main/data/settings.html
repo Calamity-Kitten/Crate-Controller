@@ -7,33 +7,42 @@
 	<style>body {background-color: black;}</style>
 
 	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<script src="settings.js" defer></script>
 </head>
 <body>
 
-	<div class="setting" id="slider">
+	<div class="setting">
 		<label>Brightness:</label>
 		<input type="range" id="brightnessInput" min="25" max="255" value="100">
 		<output id="brightnessOutput">1</output>
 	</div>
 
-	<div class="setting" id="slider">
+	<div class="setting">
+		<label>Game Mode:</label>
+		<select id="gameModeInput">
+			<option value="0">Off</option>
+			<option value="1">Basic (static time)</option>
+			<option value="2">Basic (random time)</option>
+		</select>
+	</div>
+
+	<div class="setting">
 		<label>Minimum wait time:</label>
 		<input type="range" id="minimumTimeInput" min="1" max="15" value="1">
 		<output id="minimumTimeOutput">1</output>
 	</div>
 
-	<div class="setting" id="slider">
+	<div class="setting">
 		<label>Maximum wait time:</label>
 		<input type="range" id="maximumTimeInput" min="1" max="15" value="1">
 		<output id="maximumTimeOutput">1</output>
 	</div>
 
-	<div class="setting" id="slider">
+	<div class="setting">
 		<label>Static wait time:</label>
 		<input type="range" id="staticTimeInput" min="1" max="15" value="1">
 		<output id="staticTimeOutput">1</output>
 	</div>
-
-	<script src="settings.js" defer></script>
 </body>
 </html>
