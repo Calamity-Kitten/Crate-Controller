@@ -67,7 +67,9 @@ void setHandlers() {
   server.on(UriRegex("\/GameMode\/?"), handleGetGameMode);
 
   server.serveStatic("/", LittleFS, "/settings.html");
+  server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico");
   server.serveStatic("/style.css", LittleFS, "/style.css");
+  server.serveStatic("/chart.js", LittleFS, "/chart.js");
   server.serveStatic("/settings.js", LittleFS, "/settings.js");
   
   server.onNotFound(handleNotFound);

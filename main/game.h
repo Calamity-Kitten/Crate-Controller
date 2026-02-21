@@ -8,6 +8,8 @@
 #define GAME_MODE_BASIC_STATIC 1
 #define GAME_MODE_BASIC_RANDOM 2
 
+#define DEFAULT_GAME_MODE GAME_MODE_OFF
+
 #define DEFAULT_MINIMUM_TIME 300000 // Five Minutes
 #define MINIMUM_TIME_MIN 60000 // One minute
 #define MINIMUM_TIME_MAX 900000 // Fifteen Minutes

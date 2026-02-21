@@ -18,11 +18,20 @@ function initSettings() {
 	getMinimumTimeValue();
 	getMaximumTimeValue();
 	getStaticTimeValue();
+	getGameModeValue();
 
 	var settings = document.querySelectorAll('.setting')//.style.display = 'block';
 	for(var i = 0; i < settings.length; i++) {
 		settings[i].style.display = 'block';
 	}
+}
+
+function submitSettings() {
+	setBrightnessValue();
+	setMaximumTimeValue();
+	setMinimumTimeValue();
+	setStaticTimeValue();
+	setGameModeValue();
 }
 
 function getSelectValue(URI_name, inputField) {
