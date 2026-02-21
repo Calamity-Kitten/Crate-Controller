@@ -9,12 +9,17 @@ static unsigned int staticTime = DEFAULT_STATIC_TIME;
 static int nextPress;
 
 void updateGame() {
-  if (gameMode == GAME_MODE_OFF) {
-    clearButtonLED();
-  } else if (gameMode == GAME_MODE_BASIC_STATIC) {
-    setButtonLED({.r = 245.0/255.0, .g=169.0/255.0, .b=184.0/255.0});
-  } else if (gameMode == GAME_MODE_BASIC_RANDOM) {
-    setButtonLED(getRainbowRGB());
+  switch(gameMode) {
+    case GAME_MODE_BASIC_STATIC:
+      setButtonLED({.r = 245.0/255.0, .g=169.0/255.0, .b=184.0/255.0});
+      break;
+    case GAME_MODE_BASIC_RANDOM:
+      setButtonLED(getRainbowRGB());
+      break;
+    case GAME_MODE_OFF:
+    default:
+      clearButtonLED();
+      break;
   }
 }
 
