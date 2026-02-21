@@ -4,7 +4,7 @@
 // Posted by David Hoerl, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-02-07, License - CC BY-SA 3.0
 
-static int brightness = DEFAULT_BRIGHTNESS;
+static unsigned char brightness = DEFAULT_BRIGHTNESS;
 static int rainbowRate = DEFAULT_RAINBOW_RATE;
 
 hsv rgb2hsv(rgb in) {
@@ -49,7 +49,6 @@ hsv rgb2hsv(rgb in) {
 
   return out;
 }
-
 
 rgb hsv2rgb(hsv in) {
   double hh, p, q, t, ff;
@@ -116,11 +115,45 @@ rgb getRainbowRGB() {
 }
 
 void setButtonLED(rgb buttonColor) {
-  analogWrite(RED_LED, buttonColor.r * brightness);
-  analogWrite(BLUE_LED, buttonColor.g * brightness);
-  analogWrite(GREEN_LED, buttonColor.b * brightness);
+
+  if ((unsigned char)(buttonColor.r * brightness) < 0) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.r: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.r, (unsigned char)(buttonColor.r * brightness));
+    buttonColor.r = 0.0;
+  } else if ((unsigned char)(buttonColor.r * brightness) > 255) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.r: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.r, (unsigned char)(buttonColor.r * brightness));
+    buttonColor.r = 1.0;
+  }
+  if ((unsigned char)(buttonColor.g * brightness) < 0) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.g: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.g, (unsigned char)(buttonColor.g * brightness));
+    buttonColor.g = 0.0;
+  } else if ((unsigned char)(buttonColor.g * brightness) > 255) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.g: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.g, (unsigned char)(buttonColor.g * brightness));
+    buttonColor.g = 1.0;
+  }
+  if ((unsigned char)(buttonColor.b * brightness) < 0) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.b: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.b, (unsigned char)(buttonColor.b * brightness));
+    buttonColor.b = 0.0;
+  } else if ((unsigned char)(buttonColor.b * brightness) > 255) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.b: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.b, (unsigned char)(buttonColor.b * brightness));
+    buttonColor.b = 1.0;
+  }
+
+  analogWrite(RED_LED, (unsigned char)(buttonColor.r * brightness));
+  analogWrite(BLUE_LED, (unsigned char)(buttonColor.g * brightness));
+  analogWrite(GREEN_LED, (unsigned char)(buttonColor.b * brightness));
 }
 
 void clearButtonLED() {
     setButtonLED({.r = 0.0, .g = 0.0, .b = 0.0});
+}
+
+void setBrightness(unsigned char newBrightness) {
+  // no real need for sanity checking here since it's included in the setButtonLED function
+  if (DEBUG) Serial.printf("Old: %d, Target: %d ", brightness, newBrightness);
+  brightness = newBrightness;
+  if (DEBUG) Serial.printf("New: %d\n", brightness);
+}
+
+unsigned char getBrightness() {
+  return brightness;
 }
