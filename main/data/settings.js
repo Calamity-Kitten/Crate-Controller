@@ -49,6 +49,16 @@ function setSelectValue(URI_name, inputField) {
 	return request;
 }
 
+function SelectValueChanged(URI_name, inputField) {
+	var request = httpGet(URI_name) / saveFactor;
+	console.log("Get " + URI_name + ": " + request);
+	//TODO: add CSS
+	if (request != inputField.value) {
+		inputField.classList.add("diff");
+	}
+	return request;
+}
+
 function getRangeValue(URI_name, inputField, outputField, saveFactor=1) {
 	var request = httpGet(URI_name) / saveFactor;
 	console.log("Get " + URI_name + ": " + request);
@@ -66,12 +76,24 @@ function setRangeValue(URI_name, inputField, outputField, saveFactor=1) {
 	return request;
 }
 
+function RangeValueChanged(URI_name, inputField, outputField, saveFactor=1) {
+	var request = httpGet(URI_name) / saveFactor;
+	console.log("Get " + URI_name + ": " + request);
+	outputField.value = inputField.value;
+	//TODO: add CSS
+	if (request != inputField.value) {
+		inputField.classList.add("diff");
+		outputField.classList.add("diff");
+	}
+	return request;
+}
+
 function getBrightnessValue() {
 	getRangeValue("Brightness", varBrightnessInput, brightnessOutput);
 }
 
 function setBrightnessValue() {
-	setRangeValue("Brightness", varBrightnessInput, brightnessOutput);
+	RangeValueChanged("Brightness", varBrightnessInput, brightnessOutput);
 }
 
 function getMaximumTimeValue() {
@@ -79,7 +101,7 @@ function getMaximumTimeValue() {
 }
 
 function setMaximumTimeValue() {
-	setRangeValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
+	RangeValueChanged("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
 }
 
 function getMinimumTimeValue() {
@@ -87,7 +109,7 @@ function getMinimumTimeValue() {
 }
 
 function setMinimumTimeValue() {
-	setRangeValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
+	RangeValueChanged("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
 }
 
 function getStaticTimeValue() {
@@ -95,7 +117,7 @@ function getStaticTimeValue() {
 }
 
 function setStaticTimeValue() {
-	setRangeValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
+	RangeValueChanged("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
 }
 
 function getGameModeValue() {

@@ -7,20 +7,57 @@ static unsigned int maximumTime = DEFAULT_MAXIMUM_TIME;
 static unsigned int staticTime = DEFAULT_STATIC_TIME;
 
 static int nextPress;
+static int minRand = maximumTime;
+static int maxRand = minimumTime;
 
 void updateGame() {
   switch(gameMode) {
     case GAME_MODE_BASIC_STATIC:
-      setButtonLED({.r = 245.0/255.0, .g=169.0/255.0, .b=184.0/255.0});
+      updateGame_BasicStatic();
       break;
     case GAME_MODE_BASIC_RANDOM:
-      setButtonLED(getRainbowRGB());
+      updateGame_BasicRandom();
       break;
     case GAME_MODE_OFF:
     default:
       clearButtonLED();
       break;
   }
+}
+
+void updateGame_BasicStatic() {
+  if (millis() < nextPress) return;
+
+  setButtonLED({.r = 245.0/255.0, .g=169.0/255.0, .b=184.0/255.0});
+  
+  if (checkButton()) {
+    clearButtonLED();
+    //TODO: Log press
+    resetButtonTimer_BasicStatic();
+  }
+}
+
+void updateGame_BasicRandom() {
+  if (millis() < nextPress) return;
+
+  setButtonLED(getRainbowRGB());
+
+  if (checkButton()) {
+    clearButtonLED();
+    // TODO: Log press
+    resetButtonTimer_BasicRandom();
+  }
+}
+
+void resetButtonTimer_BasicStatic() {
+  nextPress = millis() + staticTime;
+  Serial.printf("Next press: %d\n", nextPress);
+}
+
+void resetButtonTimer_BasicRandom() {
+  int randomTime = minimumTime + (int)((float)esp_random() * (float)(maximumTime - minimumTime) /  (float)UINT32_MAX);
+  nextPress = millis() + randomTime;
+  Serial.printf("Next press: %d\n", nextPress);
 }
 
 unsigned int getMinimumTime() {
@@ -89,10 +126,12 @@ void setGameMode(unsigned char newGameMode) {
     case 1:
       Serial.println("Start new game (Basic - Static)");
       gameMode = GAME_MODE_BASIC_STATIC;
+      resetButtonTimer_BasicStatic();
       break;
     case 2:
       Serial.println("Start new game (Basic - Random)");
       gameMode = GAME_MODE_BASIC_RANDOM;
+      resetButtonTimer_BasicRandom();
       break;
     case 0:
     default:
