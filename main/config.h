@@ -7,3 +7,5 @@
 #include "webpage.h"
 
 #define DEBUG true
+
+#define MDNS_HOSTNAME "crate"

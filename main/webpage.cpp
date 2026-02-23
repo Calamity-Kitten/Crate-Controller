@@ -13,7 +13,7 @@ void initWiFi() {
 
   if (DEBUG) Serial.printf("\nIP address: %s\n\n", WiFi.localIP().toString());
 
-  if (!MDNS.begin("crate")) {
+  if (!MDNS.begin(MDNS_HOSTNAME)) {
     Serial.println("Error setting up mDNS responder!");
     setButtonLED({.r = 1.0, .g = 0.0, .b = 0.0});
     while(1) delay(1000);
