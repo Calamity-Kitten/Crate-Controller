@@ -8,7 +8,7 @@
 #define PREFERENCES_MODE_R true
 #define PREFERENCES_MODE_RW false
 
-#define PREFERENCES_NAMESPACE "crate-controller"
+#define PREFERENCES_NAMESPACE "crate"
 
 void initSettings();
 

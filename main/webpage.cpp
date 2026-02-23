@@ -66,6 +66,8 @@ void setHandlers() {
   });
   server.on(UriRegex("\/GameMode\/?"), handleGetGameMode);
 
+  server.on(UriRegex("\/SaveSettings\/?"), handleSaveSettings);
+
   server.serveStatic("/", LittleFS, "/settings.html");
   server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico");
   server.serveStatic("/style.css", LittleFS, "/style.css");
@@ -123,6 +125,11 @@ void handleSetGameMode(unsigned char newGameMode) {
   if (DEBUG) Serial.println("Game Mode change requested: " + String(newGameMode));
   setGameMode(newGameMode);
   handleGetGameMode();
+}
+
+void handleSaveSettings() {
+  saveSettings();
+  server.send(200, "text/plain", "Saved");
 }
 
 void updateWiFi() {
