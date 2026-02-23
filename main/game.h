@@ -22,10 +22,10 @@
 #define STATIC_TIME_MIN 60000
 #define STATIC_TIME_MAX 900000
 
-unsigned char getGameMode();
-void setGameMode(unsigned char newGameMode);
 void updateGame();
 
+unsigned char getGameMode();
+void setGameMode(unsigned char newGameMode);
 unsigned int getMaximumTime();
 void setMaximumTime(unsigned int newMaximumTime);
 unsigned int getMinimumTime();

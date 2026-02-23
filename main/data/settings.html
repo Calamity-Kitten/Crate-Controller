@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Calamity Kitten's Crate Controller</title>
-	<style>body {background-color: black;} .setting {display: none;}</style>
+	<!-- <style>body {background-color: black;} .setting {display: none;}</style> -->
 
 	<link rel="stylesheet" type="text/css" href="style.css">
 
@@ -13,13 +13,13 @@
 </head>
 <body>
 
-	<div class="setting">
+	<div class="setting" id="brightness">
 		<label>Brightness:</label>
 		<input type="range" id="brightnessInput" min="25" max="255" value="100">
 		<output id="brightnessOutput">1</output>
 	</div>
 
-	<div class="setting">
+	<div class="setting" id="game-mode">
 		<label>Game Mode:</label>
 		<select id="gameModeInput">
 			<option value="0">Off</option>
@@ -28,7 +28,7 @@
 		</select>
 	</div>
 
-	<div class="setting">
+	<div class="setting" id="minimum-time">
 		<label>Minimum wait time:</label>
 		<input type="range" id="minimumTimeInput" min="1" max="15" value="1">
 		<output id="minimumTimeOutput">1</output>
@@ -46,5 +46,8 @@
 		<output id="staticTimeOutput">1</output>
 	</div>
 
+	<div class="setting">
+		<button id="submit">Submit</button>
+	</div>	
 </body>
 </html>
