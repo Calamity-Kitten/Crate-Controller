@@ -34,6 +34,7 @@ function submitSettings() {
 	setMinimumTimeValue();
 	setStaticTimeValue();
 	setGameModeValue();
+	httpGet("SaveSettings");
 }
 
 function getSelectValue(URI_name, inputField) {
