@@ -26,24 +26,38 @@ void updateGame() {
 }
 
 void updateGame_BasicStatic() {
-  bool newButtonPress = checkButton();
-  if (digitalRead(BUTTON) == LOW) setButtonLED({.r = 245.0/255.0, .g=169.0/255.0, .b=184.0/255.0});
-  else clearButtonLED();
+  if (millis() < nextPress) return;
+
+  setButtonLED({.r = 245.0/255.0, .g=169.0/255.0, .b=184.0/255.0});
+  
+  if (checkButton()) {
+    clearButtonLED();
+    //TODO: Log press
+    resetButtonTimer_BasicStatic();
+  }
 }
 
 void updateGame_BasicRandom() {
-  bool newButtonPress = checkButton();
-  if (digitalRead(BUTTON) == LOW) setButtonLED(getRainbowRGB());
-  else clearButtonLED();
+  if (millis() < nextPress) return;
+
+  setButtonLED(getRainbowRGB());
+
+  if (checkButton()) {
+    clearButtonLED();
+    // TODO: Log press
+    resetButtonTimer_BasicRandom();
+  }
 }
 
 void resetButtonTimer_BasicStatic() {
   nextPress = millis() + staticTime;
+  Serial.printf("Next press: %d\n", nextPress);
 }
 
 void resetButtonTimer_BasicRandom() {
   int randomTime = minimumTime + (int)((float)esp_random() * (float)(maximumTime - minimumTime) /  (float)UINT32_MAX);
   nextPress = millis() + randomTime;
+  Serial.printf("Next press: %d\n", nextPress);
 }
 
 unsigned int getMinimumTime() {
