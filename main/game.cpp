@@ -20,6 +20,7 @@ void updateGame() {
       break;
     case GAME_MODE_OFF:
     default:
+      setButtonLED(getRainbowRGB());
       clearButtonLED();
       break;
   }
@@ -52,12 +53,14 @@ void updateGame_BasicRandom() {
 void resetButtonTimer_BasicStatic() {
   nextPress = millis() + staticTime;
   Serial.printf("Next press: %d\n", nextPress);
+  clearButtonLED();
 }
 
 void resetButtonTimer_BasicRandom() {
   int randomTime = minimumTime + (int)((float)esp_random() * (float)(maximumTime - minimumTime) /  (float)UINT32_MAX);
   nextPress = millis() + randomTime;
   Serial.printf("Next press: %d\n", nextPress);
+  clearButtonLED();
 }
 
 unsigned int getMinimumTime() {
