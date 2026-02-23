@@ -5,14 +5,15 @@
 #include "config.h"
 
 // Output pins
-#define RED_LED 5
-#define GREEN_LED 4
-#define BLUE_LED 15
+#define RED_LED 19
+#define GREEN_LED 21
+#define BLUE_LED 22
 
 // Input pins
 #define BUTTON 18
 #define KEYSWITCH 14
 #define TOGGLESWITCH 27
+#define ADC_PIN 34
 
 // Display Config
 #define SCREEN_WIDTH 128

@@ -3,6 +3,7 @@ var varMinimumTimeInput = document.getElementById("minimumTimeInput");
 var varMaximumTimeInput = document.getElementById("maximumTimeInput");
 var varStaticTimeInput = document.getElementById("staticTimeInput");
 var varGameModeInput = document.getElementById("gameModeInput");
+var varSubmitButton = document.getElementById("submit");
 
 var min2ms = 60 * 1000;
 
@@ -18,11 +19,21 @@ function initSettings() {
 	getMinimumTimeValue();
 	getMaximumTimeValue();
 	getStaticTimeValue();
+	getGameModeValue();
 
 	var settings = document.querySelectorAll('.setting')//.style.display = 'block';
 	for(var i = 0; i < settings.length; i++) {
 		settings[i].style.display = 'block';
 	}
+}
+
+function submitSettings() {
+	console.log("Submit!");
+	setBrightnessValue();
+	setMaximumTimeValue();
+	setMinimumTimeValue();
+	setStaticTimeValue();
+	setGameModeValue();
 }
 
 function getSelectValue(URI_name, inputField) {
@@ -37,6 +48,19 @@ function setSelectValue(URI_name, inputField) {
 	var request = httpGet(URI_name + "/" + newVal);
 	console.log("Set " + URI_name + ": " + inputField.value + " Return: " + request);
 	inputField.value = request;
+	inputField.classList.remove("diff");
+	return request;
+}
+
+function SelectValueChanged(URI_name, inputField) {
+	var request = httpGet(URI_name);
+	console.log("Get " + URI_name + ": " + request);
+	//TODO: add CSS
+	if (request != inputField.value) {
+		inputField.classList.add("diff");
+	} else {
+		inputField.classList.remove("diff");
+	}
 	return request;
 }
 
@@ -54,6 +78,23 @@ function setRangeValue(URI_name, inputField, outputField, saveFactor=1) {
 	console.log("Set " + URI_name + ": " + inputField.value + " Return: " + request);
 	inputField.value = request;
 	outputField.value = request;
+	inputField.classList.remove("diff");
+	outputField.classList.remove("diff");
+	return request;
+}
+
+function RangeValueChanged(URI_name, inputField, outputField, saveFactor=1) {
+	var request = httpGet(URI_name) / saveFactor;
+	console.log("Get " + URI_name + ": " + request);
+	outputField.value = inputField.value;
+	//TODO: add CSS
+	if (request != inputField.value) {
+		inputField.classList.add("diff");
+		outputField.classList.add("diff");
+	} else {
+		inputField.classList.remove("diff");
+		outputField.classList.remove("diff");
+	}
 	return request;
 }
 
@@ -65,12 +106,20 @@ function setBrightnessValue() {
 	setRangeValue("Brightness", varBrightnessInput, brightnessOutput);
 }
 
+function changeBrightnessValue() {
+	RangeValueChanged("Brightness", varBrightnessInput, brightnessOutput);
+}
+
 function getMaximumTimeValue() {
 	getRangeValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms);
 }
 
 function setMaximumTimeValue() {
 	setRangeValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
+}
+
+function changeMaximumTimeValue() {
+	RangeValueChanged("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
 }
 
 function getMinimumTimeValue() {
@@ -81,12 +130,20 @@ function setMinimumTimeValue() {
 	setRangeValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
 }
 
+function changeMinimumTimeValue() {
+	RangeValueChanged("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
+}
+
 function getStaticTimeValue() {
 	getRangeValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
 }
 
 function setStaticTimeValue() {
 	setRangeValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
+}
+
+function changeStaticTimeValue() {
+	RangeValueChanged("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
 }
 
 function getGameModeValue() {
@@ -97,10 +154,15 @@ function setGameModeValue() {
 	setSelectValue("GameMode", varGameModeInput);
 }
 
+function changeGameModeValue() {
+	SelectValueChanged("GameMode", varGameModeInput);
+}
+
 document.addEventListener("DOMContentLoaded", initSettings);
 
-varBrightnessInput.addEventListener('input', setBrightnessValue);
-varMinimumTimeInput.addEventListener('input', setMinimumTimeValue);
-varMaximumTimeInput.addEventListener('input', setMaximumTimeValue);
-varStaticTimeInput.addEventListener('input', setStaticTimeValue);
-varGameModeInput.addEventListener('input', setGameModeValue);
+varBrightnessInput.addEventListener('input', changeBrightnessValue);
+varMinimumTimeInput.addEventListener('input', changeMinimumTimeValue);
+varMaximumTimeInput.addEventListener('input', changeMaximumTimeValue);
+varStaticTimeInput.addEventListener('input', changeStaticTimeValue);
+varGameModeInput.addEventListener('input', changeGameModeValue);
+varSubmitButton.addEventListener('click', submitSettings);

@@ -4,9 +4,8 @@
 #include <Arduino.h>
 #include "config.h"
 
-#define DEBOUNCE_TIME 100
+#define DEBOUNCE_TIME 50
 
-void checkButton();
-void buttonPress();
+bool checkButton();
 
 #endif //button_h

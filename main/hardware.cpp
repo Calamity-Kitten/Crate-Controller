@@ -29,8 +29,7 @@ void toggleOutput(char outputPin) {
   digitalWrite(outputPin, !digitalRead(outputPin));
 }
 
-void verbose_print_reset_reason(int reason)
-{
+void verbose_print_reset_reason(int reason) {
   switch ( reason)
   {
     case 1  : Serial.println ("Vbat power on reset");break;
