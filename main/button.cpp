@@ -5,15 +5,19 @@ static int buttonCurState;
 
 static int debounce = DEBOUNCE_TIME;
 
-void checkButton() {
+bool checkButton() {
   buttonPrevState = buttonCurState;
   buttonCurState = digitalRead(BUTTON);
 
-  if (buttonCurState && ! buttonPrevState && millis() > debounce) {
-    debounce = millis();
+  bool changed = (buttonCurState != buttonPrevState);
+  bool debounced = millis() <= debounce;
+  if (changed) {
+    debounce = millis() + DEBOUNCE_TIME;
+    if (debounced) return false;
+    else if (buttonCurState==LOW) {
+      Serial.printf("Button Pressed! %d\n", millis());
+      return true;
+    }
   }
-}
-
-void buttonPress() {
-  
+  return false;
 }

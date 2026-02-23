@@ -2,6 +2,7 @@
 #define game_h
 
 #include <Arduino.h>
+#include <esp_system.h>
 #include "config.h"
 
 #define GAME_MODE_OFF 0
@@ -23,6 +24,11 @@
 #define STATIC_TIME_MAX 900000
 
 void updateGame();
+
+void updateGame_BasicStatic();
+void updateGame_BasicRandom();
+void resetButtonTimer_BasicStatic();
+void resetButtonTimer_BasicRandom();
 
 unsigned char getGameMode();
 void setGameMode(unsigned char newGameMode);
