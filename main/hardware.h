@@ -5,14 +5,20 @@
 #include "config.h"
 
 // Output pins
-#define RED_LED 19
-#define GREEN_LED 21
-#define BLUE_LED 22
+#define RED_LED 4
+#define GREEN_LED 18
+#define BLUE_LED 19
+
+#define LED_OFF LOW
+#define LED_ON HIGH
 
 // Input pins
-#define BUTTON 18
-#define KEYSWITCH 14
-#define TOGGLESWITCH 27
+#define BUTTON 32
+#define BUTTON_PRESSED LOW
+#define BUTTON_RELEASED HIGH
+
+#define KEYSWITCH 33
+#define TOGGLESWITCH 25
 #define ADC_PIN 34
 
 // Display Config

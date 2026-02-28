@@ -1,12 +1,12 @@
 #include "game.h"
 
-static unsigned char gameMode = GAME_MODE_OFF;
+static unsigned char gameMode = DEFAULT_GAME_MODE;
 
 static unsigned int minimumTime = DEFAULT_MINIMUM_TIME;
 static unsigned int maximumTime = DEFAULT_MAXIMUM_TIME;
 static unsigned int staticTime = DEFAULT_STATIC_TIME;
 
-static int nextPress;
+static unsigned int nextPress;
 static int minRand = maximumTime;
 static int maxRand = minimumTime;
 
@@ -20,8 +20,6 @@ void updateGame() {
       break;
     case GAME_MODE_OFF:
     default:
-      setButtonLED(getRainbowRGB());
-      // clearButtonLED();
       break;
   }
 }
@@ -52,19 +50,19 @@ void updateGame_BasicRandom() {
 
 void resetButtonTimer_BasicStatic() {
   nextPress = millis() + staticTime;
-  Serial.printf("Next press: %d\n", nextPress);
+  if (DEBUG) Serial.printf("Next press: %d\n", nextPress);
   clearButtonLED();
 }
 
 void resetButtonTimer_BasicRandom() {
   int randomTime = minimumTime + (int)((float)esp_random() * (float)(maximumTime - minimumTime) /  (float)UINT32_MAX);
   nextPress = millis() + randomTime;
-  Serial.printf("Next press: %d\n", nextPress);
+  if (DEBUG) Serial.printf("Next press: %d\n", nextPress);
   clearButtonLED();
 }
 
 unsigned int getMinimumTime() {
-  Serial.printf(" - Minimum time: %d\n", minimumTime);
+  if (DEBUG) Serial.printf(" - Minimum time: %d\n", minimumTime);
   return minimumTime;
 }
 
@@ -76,7 +74,7 @@ void setMinimumTime(unsigned int newMinimumTime) {
 }
 
 unsigned int getMaximumTime() {
-  Serial.printf(" - Maximum time: %d\n", maximumTime);
+  if (DEBUG) Serial.printf(" - Maximum time: %d\n", maximumTime);
   return maximumTime;
 }
 
@@ -88,7 +86,7 @@ void setMaximumTime(unsigned int newMaximumTime) {
 }
 
 unsigned int getStaticTime() {
-  Serial.printf(" - Static time: %d\n", staticTime);
+  if (DEBUG) Serial.printf(" - Static time: %d\n", staticTime);
   return staticTime;
 }
 
@@ -100,17 +98,19 @@ void setStaticTime(unsigned int newStaticTime) {
 }
 
 unsigned char getGameMode() {
-  Serial.print(" - Game Mode: ");
-  switch(gameMode) {
-    case 0:
-      Serial.println("Off");
-      break;
-    case 1:
-      Serial.println("Basic - Static");
-      break;
-    case 2:
-      Serial.println("Basic - Random");
-      break;
+  if (DEBUG) {
+    Serial.print(" - Game Mode: ");
+    switch(gameMode) {
+      case 0:
+        Serial.println("Off");
+        break;
+      case 1:
+        Serial.println("Basic - Static");
+        break;
+      case 2:
+        Serial.println("Basic - Random");
+        break;
+    }
   }
   return gameMode;
 }
@@ -119,7 +119,7 @@ void setGameMode(unsigned char newGameMode) {
   unsigned oldGameMode = gameMode;
   // if (gameMode >= 0 && gameMode <= 2) gameMode = newGameMode;
   // else gameMode = 0;
-  Serial.printf("Old: %d, New: %d\n", oldGameMode, newGameMode);
+  if (DEBUG) Serial.printf("Old: %d, New: %d\n", oldGameMode, newGameMode);
 
   // Do nothing if game mode hasn't changed
   if (oldGameMode == newGameMode) return;
@@ -127,19 +127,24 @@ void setGameMode(unsigned char newGameMode) {
   // TODO: Initialize game
   switch(newGameMode) {
     case 1:
-      Serial.println("Start new game (Basic - Static)");
+      if (DEBUG) Serial.println("Start new game (Basic - Static)");
       gameMode = GAME_MODE_BASIC_STATIC;
       resetButtonTimer_BasicStatic();
       break;
     case 2:
-      Serial.println("Start new game (Basic - Random)");
+      if (DEBUG) Serial.println("Start new game (Basic - Random)");
       gameMode = GAME_MODE_BASIC_RANDOM;
       resetButtonTimer_BasicRandom();
       break;
     case 0:
     default:
-      Serial.println("Turn game off");
+      if (DEBUG) Serial.println("Turn game off");
       gameMode = GAME_MODE_OFF;
+      clearButtonLED();
       break;
   }
+}
+
+unsigned int getNextPress() {
+  return nextPress;
 }

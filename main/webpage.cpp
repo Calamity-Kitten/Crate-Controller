@@ -11,7 +11,7 @@ void initWiFi() {
     Serial.print(".");
   }
 
-  if (DEBUG) Serial.printf("\nIP address: %s\n\n", WiFi.localIP().toString());
+  Serial.printf("\nIP address: %s\n\n", WiFi.localIP().toString());
 
   if (!MDNS.begin(MDNS_HOSTNAME)) {
     Serial.println("Error setting up mDNS responder!");
@@ -25,7 +25,6 @@ void initWiFi() {
     setButtonLED({.r = 1.0, .g = 0.0, .b = 0.0});
     while(1) delay(1000);
   }
-  if (DEBUG) listDir(LittleFS, "/", 0);
 
   setHandlers();
 
