@@ -100,17 +100,19 @@ void setStaticTime(unsigned int newStaticTime) {
 }
 
 unsigned char getGameMode() {
-  Serial.print(" - Game Mode: ");
-  switch(gameMode) {
-    case 0:
-      Serial.println("Off");
-      break;
-    case 1:
-      Serial.println("Basic - Static");
-      break;
-    case 2:
-      Serial.println("Basic - Random");
-      break;
+  if (DEBUG) {
+    Serial.print(" - Game Mode: ");
+    switch(gameMode) {
+      case 0:
+        Serial.println("Off");
+        break;
+      case 1:
+        Serial.println("Basic - Static");
+        break;
+      case 2:
+        Serial.println("Basic - Random");
+        break;
+    }
   }
   return gameMode;
 }
