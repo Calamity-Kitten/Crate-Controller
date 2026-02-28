@@ -14,7 +14,7 @@ bool checkButton() {
   if (changed) {
     debounce = millis() + DEBOUNCE_TIME;
     if (debounced) return false;
-    else if (buttonCurState==LOW) {
+    else if (buttonCurState==BUTTON_PRESSED) {
       Serial.printf("Button Pressed! %d\n", millis());
       return true;
     }

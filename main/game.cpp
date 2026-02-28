@@ -1,6 +1,6 @@
 #include "game.h"
 
-static unsigned char gameMode = GAME_MODE_OFF;
+static unsigned char gameMode = DEFAULT_GAME_MODE;
 
 static unsigned int minimumTime = DEFAULT_MINIMUM_TIME;
 static unsigned int maximumTime = DEFAULT_MAXIMUM_TIME;
