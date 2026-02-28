@@ -20,8 +20,7 @@ void updateGame() {
       break;
     case GAME_MODE_OFF:
     default:
-      setButtonLED(getRainbowRGB());
-      // clearButtonLED();
+      clearButtonLED();
       break;
   }
 }
