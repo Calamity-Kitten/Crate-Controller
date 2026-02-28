@@ -6,7 +6,7 @@ static unsigned int minimumTime = DEFAULT_MINIMUM_TIME;
 static unsigned int maximumTime = DEFAULT_MAXIMUM_TIME;
 static unsigned int staticTime = DEFAULT_STATIC_TIME;
 
-static int nextPress;
+static unsigned int nextPress;
 static int minRand = maximumTime;
 static int maxRand = minimumTime;
 
