@@ -7,9 +7,9 @@ void initHardware() {
   pinMode(BLUE_LED, OUTPUT);
   
   // Define outputs
-  digitalWrite(RED_LED, LOW);
-  digitalWrite(RED_LED, LOW);
-  digitalWrite(RED_LED, LOW);
+  digitalWrite(RED_LED, LED_OFF);
+  digitalWrite(RED_LED, LED_OFF);
+  digitalWrite(RED_LED, LED_OFF);
 
   // Initialize Inputs
   pinMode(BUTTON, INPUT_PULLUP);
