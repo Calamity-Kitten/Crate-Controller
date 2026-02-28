@@ -20,7 +20,6 @@ void updateGame() {
       break;
     case GAME_MODE_OFF:
     default:
-      clearButtonLED();
       break;
   }
 }
@@ -141,6 +140,7 @@ void setGameMode(unsigned char newGameMode) {
     default:
       if (DEBUG) Serial.println("Turn game off");
       gameMode = GAME_MODE_OFF;
+      clearButtonLED();
       break;
   }
 }
