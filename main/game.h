@@ -38,5 +38,6 @@ unsigned int getMinimumTime();
 void setMinimumTime(unsigned int newMinimumTime);
 unsigned int getStaticTime();
 void setStaticTime(unsigned int newStaticTime);
+unsigned int getNextPress();
 
 #endif

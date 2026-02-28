@@ -144,3 +144,7 @@ void setGameMode(unsigned char newGameMode) {
       break;
   }
 }
+
+unsigned int getNextPress() {
+  return nextPress;
+}
