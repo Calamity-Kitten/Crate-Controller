@@ -80,6 +80,8 @@ void initDisplay() {
     while(1) delay(1000);
   }
 
+  display.setRotation(2);
+
   displaySplash();
 }
 
