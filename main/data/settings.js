@@ -14,19 +14,6 @@ function httpGet(theUrl) {
 	return xmlHttp.responseText;
 }
 
-function initSettings() {
-	getBrightnessValue();
-	getMinimumTimeValue();
-	getMaximumTimeValue();
-	getStaticTimeValue();
-	getGameModeValue();
-
-	var settings = document.querySelectorAll('.setting')//.style.display = 'block';
-	for(var i = 0; i < settings.length; i++) {
-		settings[i].style.display = 'block';
-	}
-}
-
 function submitSettings() {
 	console.log("Submit!");
 	setBrightnessValue();
@@ -158,8 +145,6 @@ function setGameModeValue() {
 function changeGameModeValue() {
 	SelectValueChanged("GameMode", varGameModeInput);
 }
-
-document.addEventListener("DOMContentLoaded", initSettings);
 
 varBrightnessInput.addEventListener('input', changeBrightnessValue);
 varMinimumTimeInput.addEventListener('input', changeMinimumTimeValue);

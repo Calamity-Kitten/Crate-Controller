@@ -1,5 +1,5 @@
 /*body { background-color: black; color: white; font-family: sans-serif; }*/
-.setting { display: none; align-content: center;}
+.setting { align-content: center;}
 .setting label { display: inline-block; text-align: right;}
 .setting label, .setting input, .setting output { vertical-align: center; }
 

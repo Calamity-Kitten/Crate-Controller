@@ -85,7 +85,7 @@ void setHandlers() {
 
   // TODO: Add processor() to send settings live rather than use JS
   server.on("/", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    request->send(LittleFS, "/settings.html");
+    request->send(LittleFS, "/settings.html", String(), false, processor);
   });
   server.on("/favicon.ico", HTTP_GET, [] (AsyncWebServerRequest *request) {
     request->send(LittleFS, "/favicon.ico");
@@ -96,6 +96,43 @@ void setHandlers() {
   server.on("/settings.js", HTTP_GET, [] (AsyncWebServerRequest *request) {
     request->send(LittleFS, "/settings.js");
   });
-  // server.serveStatic("/chart.js", LittleFS, "/chart.js");
   
+}
+
+String processor(const String& var) {
+  Serial.print(var);
+  if(var == "MINIMUM_BRIGHTNESS") {
+    return String(MINIMUM_BRIGHTNESS);
+  }
+  else if (var == "MAXIMUM_BRIGHTNESS") {
+    return String(MAXIMUM_BRIGHTNESS);
+  }
+  else if (var == "BRIGHTNESS") {
+    return String(getBrightness());
+  } else if(var == "MINIMUM_TIME_MIN") {
+    return String(MINIMUM_TIME_MIN / (60 * 1000));
+  }
+  else if (var == "MINIMUM_TIME_MAX") {
+    return String(MINIMUM_TIME_MAX / (60 * 1000));
+  }
+  else if (var == "MINIMUM_TIME") {
+    return String(getMinimumTime() / (60 * 1000));
+  } else if(var == "MAXIMUM_TIME_MIN") {
+    return String(MAXIMUM_TIME_MIN / (60 * 1000));
+  }
+  else if (var == "MAXIMUM_TIME_MAX") {
+    return String(MAXIMUM_TIME_MAX / (60 * 1000));
+  }
+  else if (var == "MAXIMUM_TIME") {
+    return String(getMaximumTime() / (60 * 1000));
+  } else if(var == "STATIC_TIME_MIN") {
+    return String(STATIC_TIME_MIN / (60 * 1000));
+  }
+  else if (var == "STATIC_TIME_MAX") {
+    return String(STATIC_TIME_MAX / (60 * 1000));
+  }
+  else if (var == "STATIC_TIME") {
+    return String(getStaticTime() / (60 * 1000));
+  }
+  return String();
 }

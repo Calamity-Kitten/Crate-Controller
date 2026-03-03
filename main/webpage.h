@@ -11,8 +11,8 @@
 #include "config.h"
 
 void initWiFi();
-
 void setHandlers();
 
+String processor(const String& var);
 
 #endif

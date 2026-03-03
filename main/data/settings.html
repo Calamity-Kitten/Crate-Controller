@@ -15,8 +15,8 @@
 
 	<div class="setting" id="brightness">
 		<label>Brightness:</label>
-		<input type="range" id="brightnessInput" min="25" max="255" value="100">
-		<output id="brightnessOutput">1</output>
+		<input type="range" id="brightnessInput" min="%MINIMUM_BRIGHTNESS%" max="%MAXIMUM_BRIGHTNESS%" value="%BRIGHTNESS%">
+		<output id="brightnessOutput">%BRIGHTNESS%</output>
 	</div>
 
 	<div class="setting" id="game-mode">
@@ -30,20 +30,20 @@
 
 	<div class="setting" id="minimum-time">
 		<label>Minimum wait time:</label>
-		<input type="range" id="minimumTimeInput" min="1" max="15" value="1">
-		<output id="minimumTimeOutput">1</output>
+		<input type="range" id="minimumTimeInput" min="%MINIMUM_TIME_MIN%" max="%MINIMUM_TIME_MAX%" value="%MINIMUM_TIME%">
+		<output id="minimumTimeOutput">%MINIMUM_TIME%</output>
 	</div>
 
 	<div class="setting">
 		<label>Maximum wait time:</label>
-		<input type="range" id="maximumTimeInput" min="1" max="15" value="1">
-		<output id="maximumTimeOutput">1</output>
+		<input type="range" id="maximumTimeInput" min="%MAXIMUM_TIME_MIN%" max="%MAXIMUM_TIME_MAX%" value="%MAXIMUM_TIME%">
+		<output id="maximumTimeOutput">%MAXIMUM_TIME%</output>
 	</div>
 
 	<div class="setting">
 		<label>Static wait time:</label>
-		<input type="range" id="staticTimeInput" min="1" max="15" value="1">
-		<output id="staticTimeOutput">1</output>
+		<input type="range" id="staticTimeInput" min="%STATIC_TIME_MIN%" max="%STATIC_TIME_MAX%" value="%STATIC_TIME%">
+		<output id="staticTimeOutput">%STATIC_TIME%</output>
 	</div>
 
 	<div class="setting">
