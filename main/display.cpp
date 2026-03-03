@@ -91,13 +91,6 @@ void displaySplash() {
   display.display();
 
   delay(1000);
-
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setTextColor(WHITE);
-  // display.setCursor(0, 10);
-  // display.println("Loading...");
-  // display.display();
 }
 
 void updateDisplay() {
@@ -105,7 +98,7 @@ void updateDisplay() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
-  display.setCursor(0, 10);
+  display.setCursor(0, 4);
 
   switch(gameMode) {
     case GAME_MODE_OFF:
@@ -124,6 +117,8 @@ void updateDisplay() {
 
 void updateDisplay_NoGame() {
   display.println("No game running!");
+  display.printf("\n\n\n\n");
+  display.printf("IP Address:\n%21s", WiFi.localIP().toString());
 }
 
 void updateDisplay_BasicStatic() {
@@ -149,9 +144,6 @@ void updateDisplay_BasicRandom() {
 String formatTime(unsigned int time) {
   String output = "";
 
-  // sprintf(output, "%5d:%2d:%2d.%3d", 0, (time / (60 * 1000)) % 60, (time / 1000) % 60, time % 1000);
-  // return output;
-
   output = String(time % 1000) + output;
   if (time % 1000 < 100) output = "0" + output;
   if (time % 1000 < 10) output = "0" + output;
@@ -166,9 +158,6 @@ String formatTime(unsigned int time) {
   if (time % 60 < 100) output = " " + output;
   if (time % 60 < 1000) output = " " + output;
   if (time % 60 < 10000) output = " " + output;
-
-
-  Serial.printf("%s\n", output);
 
   return output;
 }
