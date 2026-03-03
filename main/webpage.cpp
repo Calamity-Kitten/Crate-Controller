@@ -1,6 +1,6 @@
 #include "webpage.h"
 
-WebServer server(80);
+AsyncWebServer server(80);
 
 void initWiFi() {
   WiFi.mode(WIFI_STA);
@@ -32,109 +32,70 @@ void initWiFi() {
 }
 
 void setHandlers() {
-  server.on(UriRegex("\/Brightness\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    unsigned char newBrightness = server.pathArg(0).toInt();
-    if (server.pathArg(0).toInt() > 255) newBrightness = 255;
-    else if (server.pathArg(0).toInt() < 0) newBrightness = 0;
-    handleSetBrightness(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Brightness change complete: %s\n\n", String(server.pathArg(0).toInt()));
+  server.on("^\\/Brightness\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned char newBrightness = constrain(request->pathArg(0).toInt(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS);
+    setBrightness(newBrightness);
+    request->send(200, "text/plain", String(getBrightness()));
   });
-  server.on(UriRegex("\/Brightness\/?"), handleGetBrightness);
-
-  server.on(UriRegex("\/MaximumTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    handleSetMaximumTime(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Maximum Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
+  server.on("^\\/Brightness\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+      request->send(200, "text/plain", String(getBrightness()));
   });
-  server.on(UriRegex("\/MaximumTime\/?"), handleGetMaximumTime);
 
-  server.on(UriRegex("\/MinimumTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    handleSetMinimumTime(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Minimum Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
+  //TODO: Limit max/min time so max is always higher than min. Possibly with JS on the webpage?
+  server.on("^\\/MaximumTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned int newMaximumTime = constrain(request->pathArg(0).toInt(), MAXIMUM_TIME_MIN, MAXIMUM_TIME_MAX);
+    setMaximumTime(newMaximumTime);
+    request->send(200, "text/plain", String(getMaximumTime()));
   });
-  server.on(UriRegex("\/MinimumTime\/?"), handleGetMinimumTime);
-
-  server.on(UriRegex("\/StaticTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    handleSetStaticTime(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Static Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
+  server.on("^\\/MaximumTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", String(getMaximumTime()));
   });
-  server.on(UriRegex("\/StaticTime\/?"), handleGetStaticTime);
 
-  server.on(UriRegex("\/GameMode\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    handleSetGameMode(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Game Mode change complete: %s\n\n", String(server.pathArg(0).toInt()));
+  server.on("^\\/MinimumTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned int newMinimumTime = constrain(request->pathArg(0).toInt(), MINIMUM_TIME_MIN, MINIMUM_TIME_MAX);
+    setMinimumTime(newMinimumTime);
+    request->send(200, "text/plain", String(getMinimumTime()));
   });
-  server.on(UriRegex("\/GameMode\/?"), handleGetGameMode);
+  server.on("^\\/MinimumTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", String(getMinimumTime()));
+  });
 
-  server.on(UriRegex("\/SaveSettings\/?"), handleSaveSettings);
+  server.on("^\\/StaticTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned int newStaticTime = constrain(request->pathArg(0).toInt(), STATIC_TIME_MIN, STATIC_TIME_MAX);
+    setStaticTime(newStaticTime);
+    request->send(200, "text/plain", String(getStaticTime()));
+  });
+  server.on("^\\/StaticTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", String(getStaticTime()));
+  });
 
-  server.serveStatic("/", LittleFS, "/settings.html");
-  server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico");
-  server.serveStatic("/style.css", LittleFS, "/style.css");
-  server.serveStatic("/chart.js", LittleFS, "/chart.js");
-  server.serveStatic("/settings.js", LittleFS, "/settings.js");
+  server.on("^\\/GameMode\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned char newGameMode = constrain(request->pathArg(0).toInt(), MINIMUM_GAME_MODE, MAXIMUM_GAME_MODE);
+    setGameMode(newGameMode);
+    request->send(200, "text/plain", String(getGameMode()));
+  });
+  server.on("^\\/GameMode\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", String(getGameMode()));
+  });
+
+  server.on("^\\/SaveSettings\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    saveSettings();
+    request->send(200, "text/plain", "Saved");
+  });
+
+  // TODO: Add processor() to send settings live rather than use JS
+  server.on("/", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/settings.html");
+  });
+  server.on("/favicon.ico", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/favicon.ico");
+  });
+  server.on("/style.css", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/style.css");
+  });
+  server.on("/settings.js", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/settings.js");
+  });
+  // server.serveStatic("/chart.js", LittleFS, "/chart.js");
   
-  server.onNotFound(handleNotFound);
-}
-
-void handleGetBrightness() {
-  server.send(200, "text/plain", String(getBrightness()));
-}
-
-void handleSetBrightness(unsigned char newBrightness) {
-  if (DEBUG) Serial.println("Brightness change requested: " + String(newBrightness));
-  setBrightness(newBrightness);
-  handleGetBrightness();
-}
-
-void handleGetMaximumTime() {
-  server.send(200, "text/plain", String(getMaximumTime()));
-}
-
-void handleSetMaximumTime(unsigned int newMaximumTime) {
-  if (DEBUG) Serial.println("Maximum Time change requested: " + String(newMaximumTime));
-  setMaximumTime(newMaximumTime);
-  handleGetMaximumTime();
-}
-
-void handleGetMinimumTime() {
-  server.send(200, "text/plain", String(getMinimumTime()));
-}
-
-void handleSetMinimumTime(unsigned int newMinimumTime) {
-  if (DEBUG) Serial.println("Minimum Time change requested: " + String(newMinimumTime));
-  setMinimumTime(newMinimumTime);
-  handleGetMinimumTime();
-}
-
-void handleGetStaticTime() {
-  server.send(200, "text/plain", String(getStaticTime()));
-}
-
-void handleSetStaticTime(unsigned int newStaticTime) {
-  if (DEBUG) Serial.println("Static Time change requested: " + String(newStaticTime));
-  setStaticTime(newStaticTime);
-  handleGetStaticTime();
-}
-
-void handleGetGameMode() {
-  server.send(200, "text/plain", String(getGameMode()));
-}
-
-void handleSetGameMode(unsigned char newGameMode) {
-  if (DEBUG) Serial.println("Game Mode change requested: " + String(newGameMode));
-  setGameMode(newGameMode);
-  handleGetGameMode();
-}
-
-void handleSaveSettings() {
-  saveSettings();
-  server.send(200, "text/plain", "Saved");
-}
-
-void updateWiFi() {
-  server.handleClient();
-}
-
-void handleNotFound() {
-  server.send(404, "text/plain", "Not found");
 }

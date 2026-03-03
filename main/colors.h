@@ -5,6 +5,9 @@
 #include "config.h"
 
 #define DEFAULT_BRIGHTNESS 25 // scale of 0 to 255
+#define MINIMUM_BRIGHTNESS 25
+#define MAXIMUM_BRIGHTNESS 255
+
 #define DEFAULT_RAINBOW_RATE 50
 
 typedef struct {
