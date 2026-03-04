@@ -11,9 +11,11 @@ window.addEventListener('load', onLoad);
 submit.addEventListener('click', submitSettings);
 
 varBrightnessInput.addEventListener('input', function() {
+	ping();
 	brightnessOutput.value = brightnessInput.value;
 });
 varMinimumTimeInput.addEventListener('input', function() {
+	ping();
 	minimumTimeOutput.value = minimumTimeInput.value;
 	if (minimumTimeInput.valueAsNumber > maximumTimeInput.valueAsNumber) {
 		maximumTimeInput.value = minimumTimeInput.value;
@@ -21,6 +23,7 @@ varMinimumTimeInput.addEventListener('input', function() {
 	}
 });
 varMaximumTimeInput.addEventListener('input', function() {
+	ping();
 	maximumTimeOutput.value = maximumTimeInput.value;
 	if (maximumTimeInput.valueAsNumber < minimumTimeInput.valueAsNumber) {
 		minimumTimeInput.value = maximumTimeInput.value;
@@ -28,6 +31,7 @@ varMaximumTimeInput.addEventListener('input', function() {
 	}
 });
 varStaticTimeInput.addEventListener('input', function() {
+	ping();
 	staticTimeOutput.value = staticTimeInput.value;
 });
 
@@ -83,4 +87,8 @@ function submitSettings() {
 			}
 		)
 	);
+}
+
+function ping() {
+	websocket.send(JSON.stringify({}));
 }
