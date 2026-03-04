@@ -125,9 +125,9 @@ void updateDisplay_BasicStatic() {
   display.println("Mode: Static");
   unsigned int nextPress = getNextPress();
   if (nextPress < millis()) {
-    display.printf("Live reaction:\n  %s\n", formatTime(millis() - nextPress));
+    display.printf("Live reaction:\n%21s\n", formatTime(millis() - nextPress));
   } else {
-    display.printf("Next press:\n  %s\n", formatTime(nextPress - millis()));
+    display.printf("Next press:\n%21s\n", formatTime(nextPress - millis()));
   }
 }
 
@@ -135,29 +135,35 @@ void updateDisplay_BasicRandom() {
   display.println("Mode: Random");
   unsigned int nextPress = getNextPress();
   if (nextPress < millis()) {
-    display.printf("Live reaction:\n  %s\n", formatTime(millis() - nextPress));
+    display.printf("Live reaction:\n%21s\n", formatTime(millis() - nextPress));
   } else {
-    display.printf("Next press:\n  %s\n", formatTime(nextPress - millis()));
+    display.printf("Next press:\n%21s\n", formatTime(nextPress - millis()));
   }
 }
 
 String formatTime(unsigned int time) {
   String output = "";
 
+  // milliseconds
   output = String(time % 1000) + output;
   if (time % 1000 < 100) output = "0" + output;
   if (time % 1000 < 10) output = "0" + output;
 
+  // seconds
   time /= 1000;
   output = String(time % 60) + "." + output;
   if (time % 60 < 10) output = "0" + output;
   
+  // minutes
   time /= 60;
   output = String(time % 60) + ":" + output;
-  if (time % 60 < 10) output = " " + output;
-  if (time % 60 < 100) output = " " + output;
-  if (time % 60 < 1000) output = " " + output;
-  if (time % 60 < 10000) output = " " + output;
+  if (time % 60 < 10) output = "0" + output;
 
+  time /= 60;
+  if (time > 0) {
+    output = String(time) + ":" + output;
+    if (time < 10) output = "0" + output;
+  }
+  
   return output;
 }

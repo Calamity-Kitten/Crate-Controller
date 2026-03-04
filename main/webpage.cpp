@@ -1,6 +1,7 @@
 #include "webpage.h"
 
-AsyncWebServer server(80);
+static AsyncWebServer server(80);
+static AsyncWebSocket ws("/ws");
 
 void initWiFi() {
   WiFi.mode(WIFI_STA);
@@ -26,9 +27,77 @@ void initWiFi() {
     while(1) delay(1000);
   }
 
+  initWebSocket();
   setHandlers();
 
   server.begin();
+}
+
+void updateWifi() {
+  ws.cleanupClients();
+  notifyClients();
+}
+
+void initWebSocket() {
+  ws.onEvent(onEvent);
+  server.addHandler(&ws);
+}
+
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
+  AwsFrameInfo *info = (AwsFrameInfo*)arg;
+
+  if (!(info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT))
+    return;
+
+  // const uint8_t size = JSON_OBJECT_SIZE(1);
+  StaticJsonDocument<200> json;
+  DeserializationError err = deserializeJson(json, data);
+  if (err) {
+    Serial.print(F("deserializeJson() failed with code "));
+    Serial.println(err.c_str());
+    return;
+  }
+
+
+  // TODO: Key not matching in if statements
+  for (JsonPair kv : json.as<JsonObject>()) {
+    // String keyVal = kv.key().c_str;
+    Serial.printf(" - %s:%s\n", kv.key().c_str(), String(kv.value()));
+    if (strcmp(kv.key().c_str(), "Brightness") == 0) {
+      setBrightness(constrain(kv.value(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS));
+    } else if (strcmp(kv.key().c_str(), "MaximumTime") == 0) {
+      setMaximumTime(constrain(kv.value(), MAXIMUM_TIME_MIN, MAXIMUM_TIME_MAX) * 60 * 1000);
+    } else if (strcmp(kv.key().c_str(), "MinimumTime") == 0) {
+      setMinimumTime(constrain(kv.value(), MINIMUM_TIME_MIN, MINIMUM_TIME_MAX) * 60 * 1000);
+    } else if (strcmp(kv.key().c_str(), "StaticTime") == 0) {
+      setStaticTime(constrain(kv.value(), STATIC_TIME_MIN, STATIC_TIME_MAX) * 60 * 1000);
+    } else if (strcmp(kv.key().c_str(), "GameMode") == 0) {
+      setGameMode(constrain(kv.value(), MINIMUM_GAME_MODE, MAXIMUM_GAME_MODE));
+    }
+  }
+  Serial.printf(" -- Brightness: %s | MaximumTime: %s\n", String(getBrightness()), String(getMaximumTime() / (60 * 1000)));
+
+  saveSettings();
+  
+  notifyClients();
+}
+
+void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
+             void *arg, uint8_t *data, size_t len) {
+  switch (type) {
+    case WS_EVT_CONNECT:
+      Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+      break;
+    case WS_EVT_DISCONNECT:
+      Serial.printf("WebSocket client #%u disconnected\n", client->id());
+      break;
+    case WS_EVT_DATA:
+      handleWebSocketMessage(arg, data, len);
+      break;
+    case WS_EVT_PONG:
+    case WS_EVT_ERROR:
+      break;
+  }
 }
 
 void setHandlers() {
@@ -52,7 +121,7 @@ void setHandlers() {
   });
 
   server.on("^\\/MinimumTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    unsigned int newMinimumTime = constrain(request->pathArg(0).toInt(), MINIMUM_TIME_MIN, MINIMUM_TIME_MAX);
+    unsigned int newMinimumTime = constrain(request->pathArg(0).toInt(), MINIMUM_TIME_MIN, getMaximumTime());
     setMinimumTime(newMinimumTime);
     request->send(200, "text/plain", String(getMinimumTime()));
   });
@@ -100,7 +169,6 @@ void setHandlers() {
 }
 
 String processor(const String& var) {
-  Serial.print(var);
   if(var == "MINIMUM_BRIGHTNESS") {
     return String(MINIMUM_BRIGHTNESS);
   }
@@ -135,4 +203,18 @@ String processor(const String& var) {
     return String(getStaticTime() / (60 * 1000));
   }
   return String();
+}
+
+void notifyClients() {
+  StaticJsonDocument<200> json;
+  json["Brightness"] = String(getBrightness());
+  json["MaximumTime"] = String(getMaximumTime() / (60 * 1000));
+  json["MinimumTime"] = String(getMinimumTime() / (60 * 1000));
+  json["StaticTime"] = String(getStaticTime() / (60 * 1000));
+  json["GameMode"] = String(getGameMode());
+
+  char data[200];
+  size_t len = serializeJson(json, data);
+  Serial.println(data);
+  ws.textAll(data, len);
 }

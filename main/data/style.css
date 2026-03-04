@@ -4,4 +4,4 @@
 .setting label, .setting input, .setting output { vertical-align: center; }
 
 /*input, output {background-color: black;}*/
-input.diff, output.diff {background-color: yellow; color: black;}
+.diff input, .diff output {background-color: yellow; color: black;}

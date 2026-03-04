@@ -4,8 +4,8 @@ void setup() {
   // put your setup code here, to run once:
   initHardware();
   initDisplay();
-  initWiFi();
   initSettings();
+  initWiFi();
 }
 
 void loop() {

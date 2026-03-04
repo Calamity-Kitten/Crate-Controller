@@ -3,152 +3,84 @@ var varMinimumTimeInput = document.getElementById("minimumTimeInput");
 var varMaximumTimeInput = document.getElementById("maximumTimeInput");
 var varStaticTimeInput = document.getElementById("staticTimeInput");
 var varGameModeInput = document.getElementById("gameModeInput");
-var varSubmitButton = document.getElementById("submit");
+// var varSubmitButton = document.getElementById("submit");
 
-var min2ms = 60 * 1000;
+var gateway = `ws://${window.location.hostname}/ws`;
+var websocket;
+window.addEventListener('load', onLoad);
+submit.addEventListener('click', submitSettings);
 
-function httpGet(theUrl) {
-	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("GET", theUrl, false); // false for synchronous request
-	xmlHttp.send(null);
-	return xmlHttp.responseText;
+varBrightnessInput.addEventListener('input', function() {
+	brightnessOutput.value = brightnessInput.value;
+});
+varMinimumTimeInput.addEventListener('input', function() {
+	minimumTimeOutput.value = minimumTimeInput.value;
+	if (minimumTimeInput.valueAsNumber > maximumTimeInput.valueAsNumber) {
+		maximumTimeInput.value = minimumTimeInput.value;
+		maximumTimeOutput.value = maximumTimeInput.value;
+	}
+});
+varMaximumTimeInput.addEventListener('input', function() {
+	maximumTimeOutput.value = maximumTimeInput.value;
+	if (maximumTimeInput.valueAsNumber < minimumTimeInput.valueAsNumber) {
+		minimumTimeInput.value = maximumTimeInput.value;
+		minimumTimeOutput.value = minimumTimeInput.value
+	}
+});
+varStaticTimeInput.addEventListener('input', function() {
+	staticTimeOutput.value = staticTimeInput.value;
+});
+
+function initWebSocket() {
+	console.log('Trying to open a WebSocket connection...');
+	websocket = new WebSocket(gateway);
+	websocket.onopen    = onOpen;
+	websocket.onclose   = onClose;
+	websocket.onmessage = onMessage; // <-- add this line
 }
 
+function onOpen(event) {
+	console.log('Connection opened');
+}
+
+function onClose(event) {
+	console.log('Connection closed');
+	setTimeout(initWebSocket, 2000);
+}
+
+function onLoad(event) {
+	initWebSocket();
+}
+
+// TODO: Replace output field with reset button,
+// change setting class based on if it matches server setting
+function onMessage(event) {
+	let data = JSON.parse(event.data);
+	console.log(data);
+
+	brightnessOutput.value = data.Brightness;
+	if (brightnessInput.value == data.Brightness) {
+		brightnessOutput.parentElement.classList.remove("diff");
+	} else {
+		brightnessOutput.parentElement.classList.add("diff");
+	}
+	maximumTimeOutput.value = data.MaximumTime;
+	minimumTimeOutput.value = data.MinimumTime;
+	staticTimeOutput.value = data.StaticTime;
+}
+
+// TODO: this shouldn't change slider values, but should change output value and add visual indicator
 function submitSettings() {
 	console.log("Submit!");
-	setBrightnessValue();
-	setMaximumTimeValue();
-	setMinimumTimeValue();
-	setStaticTimeValue();
-	setGameModeValue();
-	httpGet("SaveSettings");
+	websocket.send(
+		JSON.stringify(
+			{
+				'Brightness' : brightnessInput.value,
+				'MaximumTime' : maximumTimeInput.value,
+				'MinimumTime' : minimumTimeInput.value,
+				'StaticTime' : staticTimeInput.value,
+				'GameMode' : gameModeInput.value
+			}
+		)
+	);
 }
-
-function getSelectValue(URI_name, inputField) {
-	var request = httpGet(URI_name);
-	console.log("Get " + URI_name + ": " + request);
-	inputField.value = request;
-	return request;
-}
-
-function setSelectValue(URI_name, inputField) {
-	var newVal = inputField.value;
-	var request = httpGet(URI_name + "/" + newVal);
-	console.log("Set " + URI_name + ": " + inputField.value + " Return: " + request);
-	inputField.value = request;
-	inputField.classList.remove("diff");
-	return request;
-}
-
-function SelectValueChanged(URI_name, inputField) {
-	var request = httpGet(URI_name);
-	console.log("Get " + URI_name + ": " + request);
-	//TODO: add CSS
-	if (request != inputField.value) {
-		inputField.classList.add("diff");
-	} else {
-		inputField.classList.remove("diff");
-	}
-	return request;
-}
-
-function getRangeValue(URI_name, inputField, outputField, saveFactor=1) {
-	var request = httpGet(URI_name) / saveFactor;
-	console.log("Get " + URI_name + ": " + request);
-	inputField.value = request;
-	outputField.value = request;
-	return request;
-}
-
-function setRangeValue(URI_name, inputField, outputField, saveFactor=1) {
-	var newVal = inputField.value * saveFactor;
-	var request = httpGet(URI_name + "/" + newVal) / saveFactor;
-	console.log("Set " + URI_name + ": " + inputField.value + " Return: " + request);
-	inputField.value = request;
-	outputField.value = request;
-	inputField.classList.remove("diff");
-	outputField.classList.remove("diff");
-	return request;
-}
-
-function RangeValueChanged(URI_name, inputField, outputField, saveFactor=1) {
-	var request = httpGet(URI_name) / saveFactor;
-	console.log("Get " + URI_name + ": " + request);
-	outputField.value = inputField.value;
-	//TODO: add CSS
-	if (request != inputField.value) {
-		inputField.classList.add("diff");
-		outputField.classList.add("diff");
-	} else {
-		inputField.classList.remove("diff");
-		outputField.classList.remove("diff");
-	}
-	return request;
-}
-
-function getBrightnessValue() {
-	getRangeValue("Brightness", varBrightnessInput, brightnessOutput);
-}
-
-function setBrightnessValue() {
-	setRangeValue("Brightness", varBrightnessInput, brightnessOutput);
-}
-
-function changeBrightnessValue() {
-	RangeValueChanged("Brightness", varBrightnessInput, brightnessOutput);
-}
-
-function getMaximumTimeValue() {
-	getRangeValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms);
-}
-
-function setMaximumTimeValue() {
-	setRangeValue("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
-}
-
-function changeMaximumTimeValue() {
-	RangeValueChanged("MaximumTime", varMaximumTimeInput, maximumTimeOutput, min2ms)
-}
-
-function getMinimumTimeValue() {
-	getRangeValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
-}
-
-function setMinimumTimeValue() {
-	setRangeValue("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
-}
-
-function changeMinimumTimeValue() {
-	RangeValueChanged("MinimumTime", varMinimumTimeInput, minimumTimeOutput, min2ms);
-}
-
-function getStaticTimeValue() {
-	getRangeValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
-}
-
-function setStaticTimeValue() {
-	setRangeValue("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
-}
-
-function changeStaticTimeValue() {
-	RangeValueChanged("StaticTime", varStaticTimeInput, staticTimeOutput, min2ms);
-}
-
-function getGameModeValue() {
-	getSelectValue("GameMode", varGameModeInput);
-}
-
-function setGameModeValue() {
-	setSelectValue("GameMode", varGameModeInput);
-}
-
-function changeGameModeValue() {
-	SelectValueChanged("GameMode", varGameModeInput);
-}
-
-varBrightnessInput.addEventListener('input', changeBrightnessValue);
-varMinimumTimeInput.addEventListener('input', changeMinimumTimeValue);
-varMaximumTimeInput.addEventListener('input', changeMaximumTimeValue);
-varStaticTimeInput.addEventListener('input', changeStaticTimeValue);
-varGameModeInput.addEventListener('input', changeGameModeValue);
-varSubmitButton.addEventListener('click', submitSettings);
