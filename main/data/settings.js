@@ -12,27 +12,21 @@ submit.addEventListener('click', submitSettings);
 
 varBrightnessInput.addEventListener('input', function() {
 	ping();
-	brightnessOutput.value = brightnessInput.value;
 });
 varMinimumTimeInput.addEventListener('input', function() {
 	ping();
-	minimumTimeOutput.value = minimumTimeInput.value;
 	if (minimumTimeInput.valueAsNumber > maximumTimeInput.valueAsNumber) {
 		maximumTimeInput.value = minimumTimeInput.value;
-		maximumTimeOutput.value = maximumTimeInput.value;
 	}
 });
 varMaximumTimeInput.addEventListener('input', function() {
 	ping();
-	maximumTimeOutput.value = maximumTimeInput.value;
 	if (maximumTimeInput.valueAsNumber < minimumTimeInput.valueAsNumber) {
 		minimumTimeInput.value = maximumTimeInput.value;
-		minimumTimeOutput.value = minimumTimeInput.value
 	}
 });
 varStaticTimeInput.addEventListener('input', function() {
 	ping();
-	staticTimeOutput.value = staticTimeInput.value;
 });
 
 function initWebSocket() {
@@ -62,15 +56,21 @@ function onMessage(event) {
 	let data = JSON.parse(event.data);
 	console.log(data);
 
-	brightnessOutput.value = data.Brightness;
-	if (brightnessInput.value == data.Brightness) {
-		brightnessOutput.parentElement.classList.remove("diff");
-	} else {
-		brightnessOutput.parentElement.classList.add("diff");
-	}
-	maximumTimeOutput.value = data.MaximumTime;
-	minimumTimeOutput.value = data.MinimumTime;
-	staticTimeOutput.value = data.StaticTime;
+	if (brightnessInput.value == data.Brightness)
+		brightnessInput.parentElement.classList.remove("diff");
+	else brightnessInput.parentElement.classList.add("diff");
+
+	if (maximumTimeInput.value == data.MaximumTime)
+		maximumTimeInput.parentElement.classList.remove("diff");
+	else maximumTimeInput.parentElement.classList.add("diff");
+
+	if (minimumTimeInput.value == data.MinimumTime)
+		minimumTimeInput.parentElement.classList.remove("diff");
+	else minimumTimeInput.parentElement.classList.add("diff");
+
+	if (staticTimeInput.value == data.StaticTime)
+		staticTimeInput.parentElement.classList.remove("diff");
+	else staticTimeInput.parentElement.classList.add("diff");
 }
 
 // TODO: this shouldn't change slider values, but should change output value and add visual indicator
