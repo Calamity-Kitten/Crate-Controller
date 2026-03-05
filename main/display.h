@@ -1,7 +1,6 @@
 #ifndef display_h
 #define display_h
 
-#include <Arduino.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>

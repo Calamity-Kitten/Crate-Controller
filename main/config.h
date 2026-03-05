@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include "button.h"
 #include "colors.h"
 #include "display.h"

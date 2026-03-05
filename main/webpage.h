@@ -1,7 +1,6 @@
 #ifndef webpage_h
 #define webpage_h
 
-#include <Arduino.h>
 #include <LittleFS.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>

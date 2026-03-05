@@ -1,7 +1,6 @@
 #ifndef game_h
 #define game_h
 
-#include <Arduino.h>
 #include <esp_system.h>
 #include "config.h"
 

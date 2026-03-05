@@ -1,7 +1,6 @@
 #ifndef hardware_h
 #define hardware_h
 
-#include <Arduino.h>
 #include "config.h"
 
 // Output pins

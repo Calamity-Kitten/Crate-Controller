@@ -1,7 +1,6 @@
 #ifndef colors_h
 #define colors_h
 
-#include <Arduino.h>
 #include "config.h"
 
 #define DEFAULT_BRIGHTNESS 25 // scale of 0 to 255
