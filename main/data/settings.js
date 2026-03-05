@@ -39,6 +39,7 @@ function initWebSocket() {
 
 function onOpen(event) {
 	console.log('Connection opened');
+	ping();
 }
 
 function onClose(event) {

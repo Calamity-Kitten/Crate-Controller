@@ -4,7 +4,7 @@
 // Posted by David Hoerl, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-02-07, License - CC BY-SA 3.0
 
-static unsigned char brightness = DEFAULT_BRIGHTNESS;
+static unsigned int brightness = DEFAULT_BRIGHTNESS;
 static int rainbowRate = DEFAULT_RAINBOW_RATE;
 
 hsv rgb2hsv(rgb in) {
@@ -116,44 +116,44 @@ rgb getRainbowRGB() {
 
 void setButtonLED(rgb buttonColor) {
 
-  if ((unsigned char)(buttonColor.r * brightness) < 0) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.r: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.r, (unsigned char)(buttonColor.r * brightness));
+  if ((unsigned int)(buttonColor.r * brightness) < MINIMUM_BRIGHTNESS) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.r: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.r, (unsigned int)(buttonColor.r * brightness));
     buttonColor.r = 0.0;
-  } else if ((unsigned char)(buttonColor.r * brightness) > 255) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.r: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.r, (unsigned char)(buttonColor.r * brightness));
+  } else if ((unsigned int)(buttonColor.r * brightness) > MAXIMUM_BRIGHTNESS) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.r: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.r, (unsigned int)(buttonColor.r * brightness));
     buttonColor.r = 1.0;
   }
-  if ((unsigned char)(buttonColor.g * brightness) < 0) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.g: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.g, (unsigned char)(buttonColor.g * brightness));
+  if ((unsigned int)(buttonColor.g * brightness) < MINIMUM_BRIGHTNESS) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.g: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.g, (unsigned int)(buttonColor.g * brightness));
     buttonColor.g = 0.0;
-  } else if ((unsigned char)(buttonColor.g * brightness) > 255) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.g: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.g, (unsigned char)(buttonColor.g * brightness));
+  } else if ((unsigned int)(buttonColor.g * brightness) > MAXIMUM_BRIGHTNESS) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.g: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.g, (unsigned int)(buttonColor.g * brightness));
     buttonColor.g = 1.0;
   }
-  if ((unsigned char)(buttonColor.b * brightness) < 0) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.b: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.b, (unsigned char)(buttonColor.b * brightness));
+  if ((unsigned int)(buttonColor.b * brightness) < MINIMUM_BRIGHTNESS) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.b: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.b, (unsigned int)(buttonColor.b * brightness));
     buttonColor.b = 0.0;
-  } else if ((unsigned char)(buttonColor.b * brightness) > 255) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.b: %f, char: %d)\n", __FILE__, __LINE__, buttonColor.b, (unsigned char)(buttonColor.b * brightness));
+  } else if ((unsigned int)(buttonColor.b * brightness) > MAXIMUM_BRIGHTNESS) {
+    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.b: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.b, (unsigned int)(buttonColor.b * brightness));
     buttonColor.b = 1.0;
   }
 
-  analogWrite(RED_LED, (unsigned char)(buttonColor.r * brightness));
-  analogWrite(BLUE_LED, (unsigned char)(buttonColor.g * brightness));
-  analogWrite(GREEN_LED, (unsigned char)(buttonColor.b * brightness));
+  ledcWriteChannel(0, (unsigned int)(buttonColor.r * brightness));
+  ledcWriteChannel(1, (unsigned int)(buttonColor.g * brightness));
+  ledcWriteChannel(2, (unsigned int)(buttonColor.b * brightness));
 }
 
 void clearButtonLED() {
     setButtonLED({.r = 0.0, .g = 0.0, .b = 0.0});
 }
 
-void setBrightness(unsigned char newBrightness) {
+void setBrightness(unsigned int newBrightness) {
   // no real need for sanity checking here since it's included in the setButtonLED function
   Serial.printf("Old: %d, Target: %d ", brightness, newBrightness);
   brightness = newBrightness;
   Serial.printf("New: %d\n", brightness);
 }
 
-unsigned char getBrightness() {
+unsigned int getBrightness() {
   return brightness;
 }
