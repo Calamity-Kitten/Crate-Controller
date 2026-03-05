@@ -54,7 +54,6 @@ function onLoad(event) {
 // change setting class based on if it matches server setting
 function onMessage(event) {
 	let data = JSON.parse(event.data);
-	console.log(data);
 
 	if (brightnessInput.value == data.Brightness)
 		brightnessInput.parentElement.classList.remove("diff");
@@ -75,7 +74,6 @@ function onMessage(event) {
 
 // TODO: this shouldn't change slider values, but should change output value and add visual indicator
 function submitSettings() {
-	console.log("Submit!");
 	websocket.send(
 		JSON.stringify(
 			{

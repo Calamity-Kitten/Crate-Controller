@@ -49,8 +49,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   if (!(info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT))
     return;
 
-  // const uint8_t size = JSON_OBJECT_SIZE(1);
-  StaticJsonDocument<200> json;
+  StaticJsonDocument<JSON_SIZE> json;
   DeserializationError err = deserializeJson(json, data);
   if (err) {
     Serial.print(F("deserializeJson() failed with code "));
@@ -206,14 +205,14 @@ String processor(const String& var) {
 }
 
 void notifyClients() {
-  StaticJsonDocument<200> json;
+  StaticJsonDocument<JSON_SIZE> json;
   json["Brightness"] = String(getBrightness());
   json["MaximumTime"] = String(getMaximumTime() / (60 * 1000));
   json["MinimumTime"] = String(getMinimumTime() / (60 * 1000));
   json["StaticTime"] = String(getStaticTime() / (60 * 1000));
   json["GameMode"] = String(getGameMode());
 
-  char data[200];
+  char data[JSON_SIZE];
   size_t len = serializeJson(json, data);
   Serial.println(data);
   ws.textAll(data, len);

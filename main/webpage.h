@@ -12,7 +12,7 @@
 
 #include "config.h"
 
-// #define JSON_SIZE 100
+#define JSON_SIZE 150
 
 void initWiFi();
 void initWebSocket();
