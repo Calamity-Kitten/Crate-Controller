@@ -64,6 +64,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     Serial.printf(" - %s:%s\n", kv.key().c_str(), String(kv.value()));
     if (strcmp(kv.key().c_str(), "Brightness") == 0) {
       setBrightness(constrain(kv.value(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS));
+      Serial.println("67: " + String(getBrightness()));
     } else if (strcmp(kv.key().c_str(), "MaximumTime") == 0) {
       setMaximumTime(constrain(kv.value(), MAXIMUM_TIME_MIN, MAXIMUM_TIME_MAX) * 60 * 1000);
     } else if (strcmp(kv.key().c_str(), "MinimumTime") == 0) {
@@ -101,7 +102,7 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
 
 void setHandlers() {
   server.on("^\\/Brightness\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    unsigned char newBrightness = constrain(request->pathArg(0).toInt(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS);
+    unsigned int newBrightness = constrain(request->pathArg(0).toInt(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS);
     setBrightness(newBrightness);
     request->send(200, "text/plain", String(getBrightness()));
   });
