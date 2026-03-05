@@ -4,50 +4,54 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Calamity Kitten's Crate Controller</title>
-	<!-- <style>body {background-color: black;} .setting {display: none;}</style> -->
 
+	<!-- <style>div {opacity: 0;}</style> -->
 	<link rel="stylesheet" type="text/css" href="style.css">
 
-	<script src="settings.js" defer></script>
+	<script src="settings.js" async></script>
 
 </head>
 <body>
-
-	<div class="setting" id="brightness">
-		<label>Brightness:</label>
-		<input type="range" id="brightnessInput" min="25" max="255" value="100">
-		<output id="brightnessOutput">1</output>
+	<div class="header">
+		<h1>Calamity Kitten's Crate Controller</h1>
 	</div>
-
-	<div class="setting" id="game-mode">
-		<label>Game Mode:</label>
-		<select id="gameModeInput">
-			<option value="0">Off</option>
-			<option value="1">Basic (static time)</option>
-			<option value="2">Basic (random time)</option>
-		</select>
+	<div id="navbar">
+		<a class="navbarlinks">Status</a>
+		<a class="navbarlinks">Report</a>
+		<a class="navbarlinks active">Settings</a>
 	</div>
+	<div class="content">
+		<div class="setting" id="brightness">
+			<label>Brightness:</label><input type="range" id="brightnessInput" min="%MINIMUM_BRIGHTNESS%" max="%MAXIMUM_BRIGHTNESS%" value="%BRIGHTNESS%">
+		</div>
 
-	<div class="setting" id="minimum-time">
-		<label>Minimum wait time:</label>
-		<input type="range" id="minimumTimeInput" min="1" max="15" value="1">
-		<output id="minimumTimeOutput">1</output>
+		<div class="setting" id="game-mode">
+			<label>Game Mode:</label>
+			<select id="gameModeInput">
+				<option value="0">Off</option>
+				<option value="1">Basic (static time)</option>
+				<option value="2">Basic (random time)</option>
+			</select>
+		</div>
+
+		<div class="setting" id="minimum-time">
+			<label>Minimum wait time:</label>
+			<input type="range" id="minimumTimeInput" min="%MINIMUM_TIME_MIN%" max="%MINIMUM_TIME_MAX%" value="%MINIMUM_TIME%">
+		</div>
+
+		<div class="setting">
+			<label>Maximum wait time:</label>
+			<input type="range" id="maximumTimeInput" min="%MAXIMUM_TIME_MIN%" max="%MAXIMUM_TIME_MAX%" value="%MAXIMUM_TIME%">
+		</div>
+
+		<div class="setting">
+			<label>Static wait time:</label>
+			<input type="range" id="staticTimeInput" min="%STATIC_TIME_MIN%" max="%STATIC_TIME_MAX%" value="%STATIC_TIME%">
+		</div>
+
+		<div class="setting">
+			<button id="submit">Submit</button>
+		</div>
 	</div>
-
-	<div class="setting">
-		<label>Maximum wait time:</label>
-		<input type="range" id="maximumTimeInput" min="1" max="15" value="1">
-		<output id="maximumTimeOutput">1</output>
-	</div>
-
-	<div class="setting">
-		<label>Static wait time:</label>
-		<input type="range" id="staticTimeInput" min="1" max="15" value="1">
-		<output id="staticTimeOutput">1</output>
-	</div>
-
-	<div class="setting">
-		<button id="submit">Submit</button>
-	</div>	
 </body>
 </html>

@@ -2,31 +2,26 @@
 #define webpage_h
 
 #include <Arduino.h>
-#include <ESPmDNS.h>
 #include <LittleFS.h>
-#include <WebServer.h>
 #include <WiFi.h>
-#include <uri/UriRegex.h>
+#include <ESPmDNS.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <ArduinoJson.h>
+#include <stdlib.h>
 
 #include "config.h"
 
-void initWiFi();
-void updateWiFi();
+#define JSON_SIZE 150
 
+void initWiFi();
+void initWebSocket();
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len);
+void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
 void setHandlers();
 
-void handleGetBrightness();
-void handleSetBrightness(unsigned char newBrightness);
-void handleGetMaximumTime();
-void handleSetMaximumTime(unsigned int newMaximumTime);
-void handleGetMinimumTime();
-void handleSetMinimumTime(unsigned int newMinimumTime);
-void handleGetStaticTime();
-void handleSetStaticTime(unsigned int newStaticTime);
-void handleGetGameMode();
-void handleSetGameMode(unsigned char newGameMode);
-void handleSaveSettings();
+String processor(const String& var);
 
-void handleNotFound();
+void notifyClients();
 
 #endif

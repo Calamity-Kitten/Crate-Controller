@@ -1,6 +1,7 @@
 #include "webpage.h"
 
-WebServer server(80);
+static AsyncWebServer server(80);
+static AsyncWebSocket ws("/ws");
 
 void initWiFi() {
   WiFi.mode(WIFI_STA);
@@ -26,115 +27,193 @@ void initWiFi() {
     while(1) delay(1000);
   }
 
+  initWebSocket();
   setHandlers();
 
   server.begin();
 }
 
-void setHandlers() {
-  server.on(UriRegex("\/Brightness\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    unsigned char newBrightness = server.pathArg(0).toInt();
-    if (server.pathArg(0).toInt() > 255) newBrightness = 255;
-    else if (server.pathArg(0).toInt() < 0) newBrightness = 0;
-    handleSetBrightness(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Brightness change complete: %s\n\n", String(server.pathArg(0).toInt()));
-  });
-  server.on(UriRegex("\/Brightness\/?"), handleGetBrightness);
-
-  server.on(UriRegex("\/MaximumTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    handleSetMaximumTime(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Maximum Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
-  });
-  server.on(UriRegex("\/MaximumTime\/?"), handleGetMaximumTime);
-
-  server.on(UriRegex("\/MinimumTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    handleSetMinimumTime(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Minimum Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
-  });
-  server.on(UriRegex("\/MinimumTime\/?"), handleGetMinimumTime);
-
-  server.on(UriRegex("\/StaticTime\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    handleSetStaticTime(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Static Time change complete: %s\n\n", String(server.pathArg(0).toInt()));
-  });
-  server.on(UriRegex("\/StaticTime\/?"), handleGetStaticTime);
-
-  server.on(UriRegex("\/GameMode\/([0-9]+)\/?$"), HTTP_GET, [&]() {
-    handleSetGameMode(server.pathArg(0).toInt());
-    if (DEBUG) Serial.printf(" - Game Mode change complete: %s\n\n", String(server.pathArg(0).toInt()));
-  });
-  server.on(UriRegex("\/GameMode\/?"), handleGetGameMode);
-
-  server.on(UriRegex("\/SaveSettings\/?"), handleSaveSettings);
-
-  server.serveStatic("/", LittleFS, "/settings.html");
-  server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico");
-  server.serveStatic("/style.css", LittleFS, "/style.css");
-  server.serveStatic("/chart.js", LittleFS, "/chart.js");
-  server.serveStatic("/settings.js", LittleFS, "/settings.js");
-  
-  server.onNotFound(handleNotFound);
+void updateWifi() {
+  ws.cleanupClients();
+  notifyClients();
 }
 
-void handleGetBrightness() {
-  server.send(200, "text/plain", String(getBrightness()));
+void initWebSocket() {
+  ws.onEvent(onEvent);
+  server.addHandler(&ws);
 }
 
-void handleSetBrightness(unsigned char newBrightness) {
-  if (DEBUG) Serial.println("Brightness change requested: " + String(newBrightness));
-  setBrightness(newBrightness);
-  handleGetBrightness();
-}
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
+  AwsFrameInfo *info = (AwsFrameInfo*)arg;
 
-void handleGetMaximumTime() {
-  server.send(200, "text/plain", String(getMaximumTime()));
-}
+  if (!(info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT))
+    return;
 
-void handleSetMaximumTime(unsigned int newMaximumTime) {
-  if (DEBUG) Serial.println("Maximum Time change requested: " + String(newMaximumTime));
-  setMaximumTime(newMaximumTime);
-  handleGetMaximumTime();
-}
+  StaticJsonDocument<JSON_SIZE> json;
+  DeserializationError err = deserializeJson(json, data);
+  if (err) {
+    Serial.print(F("deserializeJson() failed with code "));
+    Serial.println(err.c_str());
+    return;
+  }
 
-void handleGetMinimumTime() {
-  server.send(200, "text/plain", String(getMinimumTime()));
-}
 
-void handleSetMinimumTime(unsigned int newMinimumTime) {
-  if (DEBUG) Serial.println("Minimum Time change requested: " + String(newMinimumTime));
-  setMinimumTime(newMinimumTime);
-  handleGetMinimumTime();
-}
+  // TODO: Key not matching in if statements
+  for (JsonPair kv : json.as<JsonObject>()) {
+    // String keyVal = kv.key().c_str;
+    Serial.printf(" - %s:%s\n", kv.key().c_str(), String(kv.value()));
+    if (strcmp(kv.key().c_str(), "Brightness") == 0) {
+      setBrightness(constrain(kv.value(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS));
+    } else if (strcmp(kv.key().c_str(), "MaximumTime") == 0) {
+      setMaximumTime(constrain(kv.value(), MAXIMUM_TIME_MIN, MAXIMUM_TIME_MAX) * 60 * 1000);
+    } else if (strcmp(kv.key().c_str(), "MinimumTime") == 0) {
+      setMinimumTime(constrain(kv.value(), MINIMUM_TIME_MIN, MINIMUM_TIME_MAX) * 60 * 1000);
+    } else if (strcmp(kv.key().c_str(), "StaticTime") == 0) {
+      setStaticTime(constrain(kv.value(), STATIC_TIME_MIN, STATIC_TIME_MAX) * 60 * 1000);
+    } else if (strcmp(kv.key().c_str(), "GameMode") == 0) {
+      setGameMode(constrain(kv.value(), MINIMUM_GAME_MODE, MAXIMUM_GAME_MODE));
+    }
+  }
+  Serial.printf(" -- Brightness: %s | MaximumTime: %s\n", String(getBrightness()), String(getMaximumTime() / (60 * 1000)));
 
-void handleGetStaticTime() {
-  server.send(200, "text/plain", String(getStaticTime()));
-}
-
-void handleSetStaticTime(unsigned int newStaticTime) {
-  if (DEBUG) Serial.println("Static Time change requested: " + String(newStaticTime));
-  setStaticTime(newStaticTime);
-  handleGetStaticTime();
-}
-
-void handleGetGameMode() {
-  server.send(200, "text/plain", String(getGameMode()));
-}
-
-void handleSetGameMode(unsigned char newGameMode) {
-  if (DEBUG) Serial.println("Game Mode change requested: " + String(newGameMode));
-  setGameMode(newGameMode);
-  handleGetGameMode();
-}
-
-void handleSaveSettings() {
   saveSettings();
-  server.send(200, "text/plain", "Saved");
+  
+  notifyClients();
 }
 
-void updateWiFi() {
-  server.handleClient();
+void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
+             void *arg, uint8_t *data, size_t len) {
+  switch (type) {
+    case WS_EVT_CONNECT:
+      Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+      break;
+    case WS_EVT_DISCONNECT:
+      Serial.printf("WebSocket client #%u disconnected\n", client->id());
+      break;
+    case WS_EVT_DATA:
+      handleWebSocketMessage(arg, data, len);
+      break;
+    case WS_EVT_PONG:
+    case WS_EVT_ERROR:
+      break;
+  }
 }
 
-void handleNotFound() {
-  server.send(404, "text/plain", "Not found");
+void setHandlers() {
+  server.on("^\\/Brightness\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned char newBrightness = constrain(request->pathArg(0).toInt(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS);
+    setBrightness(newBrightness);
+    request->send(200, "text/plain", String(getBrightness()));
+  });
+  server.on("^\\/Brightness\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+      request->send(200, "text/plain", String(getBrightness()));
+  });
+
+  //TODO: Limit max/min time so max is always higher than min. Possibly with JS on the webpage?
+  server.on("^\\/MaximumTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned int newMaximumTime = constrain(request->pathArg(0).toInt(), MAXIMUM_TIME_MIN, MAXIMUM_TIME_MAX);
+    setMaximumTime(newMaximumTime);
+    request->send(200, "text/plain", String(getMaximumTime()));
+  });
+  server.on("^\\/MaximumTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", String(getMaximumTime()));
+  });
+
+  server.on("^\\/MinimumTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned int newMinimumTime = constrain(request->pathArg(0).toInt(), MINIMUM_TIME_MIN, getMaximumTime());
+    setMinimumTime(newMinimumTime);
+    request->send(200, "text/plain", String(getMinimumTime()));
+  });
+  server.on("^\\/MinimumTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", String(getMinimumTime()));
+  });
+
+  server.on("^\\/StaticTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned int newStaticTime = constrain(request->pathArg(0).toInt(), STATIC_TIME_MIN, STATIC_TIME_MAX);
+    setStaticTime(newStaticTime);
+    request->send(200, "text/plain", String(getStaticTime()));
+  });
+  server.on("^\\/StaticTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", String(getStaticTime()));
+  });
+
+  server.on("^\\/GameMode\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    unsigned char newGameMode = constrain(request->pathArg(0).toInt(), MINIMUM_GAME_MODE, MAXIMUM_GAME_MODE);
+    setGameMode(newGameMode);
+    request->send(200, "text/plain", String(getGameMode()));
+  });
+  server.on("^\\/GameMode\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", String(getGameMode()));
+  });
+
+  server.on("^\\/SaveSettings\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    saveSettings();
+    request->send(200, "text/plain", "Saved");
+  });
+
+  // TODO: Add processor() to send settings live rather than use JS
+  server.on("/", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/settings.html", String(), false, processor);
+  });
+  server.on("/favicon.ico", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/favicon.ico");
+  });
+  server.on("/style.css", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/style.css");
+  });
+  server.on("/settings.js", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/settings.js");
+  });
+  
+}
+
+String processor(const String& var) {
+  if(var == "MINIMUM_BRIGHTNESS") {
+    return String(MINIMUM_BRIGHTNESS);
+  }
+  else if (var == "MAXIMUM_BRIGHTNESS") {
+    return String(MAXIMUM_BRIGHTNESS);
+  }
+  else if (var == "BRIGHTNESS") {
+    return String(getBrightness());
+  } else if(var == "MINIMUM_TIME_MIN") {
+    return String(MINIMUM_TIME_MIN / (60 * 1000));
+  }
+  else if (var == "MINIMUM_TIME_MAX") {
+    return String(MINIMUM_TIME_MAX / (60 * 1000));
+  }
+  else if (var == "MINIMUM_TIME") {
+    return String(getMinimumTime() / (60 * 1000));
+  } else if(var == "MAXIMUM_TIME_MIN") {
+    return String(MAXIMUM_TIME_MIN / (60 * 1000));
+  }
+  else if (var == "MAXIMUM_TIME_MAX") {
+    return String(MAXIMUM_TIME_MAX / (60 * 1000));
+  }
+  else if (var == "MAXIMUM_TIME") {
+    return String(getMaximumTime() / (60 * 1000));
+  } else if(var == "STATIC_TIME_MIN") {
+    return String(STATIC_TIME_MIN / (60 * 1000));
+  }
+  else if (var == "STATIC_TIME_MAX") {
+    return String(STATIC_TIME_MAX / (60 * 1000));
+  }
+  else if (var == "STATIC_TIME") {
+    return String(getStaticTime() / (60 * 1000));
+  }
+  return String();
+}
+
+void notifyClients() {
+  StaticJsonDocument<JSON_SIZE> json;
+  json["Brightness"] = String(getBrightness());
+  json["MaximumTime"] = String(getMaximumTime() / (60 * 1000));
+  json["MinimumTime"] = String(getMinimumTime() / (60 * 1000));
+  json["StaticTime"] = String(getStaticTime() / (60 * 1000));
+  json["GameMode"] = String(getGameMode());
+
+  char data[JSON_SIZE];
+  size_t len = serializeJson(json, data);
+  Serial.println(data);
+  ws.textAll(data, len);
 }
