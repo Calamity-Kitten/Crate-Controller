@@ -201,6 +201,15 @@ String processor(const String& var) {
   }
   else if (var == "STATIC_TIME") {
     return String(getStaticTime() / (60 * 1000));
+  } else if (var == "GAMEMODE_0") {
+    if (getGameMode() == 0) return "selected";
+    else return "";
+  } else if (var == "GAMEMODE_1") {
+    if (getGameMode() == 1) return "selected";
+    else return "";
+  } else if (var == "GAMEMODE_2") {
+    if (getGameMode() == 2) return "selected";
+    else return "";
   }
   return String();
 }
