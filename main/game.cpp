@@ -132,13 +132,13 @@ void setGameMode(unsigned char newGameMode) {
       if (DEBUG) Serial.println("Start new game (Basic - Static)");
       gameMode = GAME_MODE_BASIC_STATIC;
       resetButtonTimer_BasicStatic();
-      writeFile(LittleFS, LOG_NAME, "STATIC\n");
+      resetLog();
       break;
     case 2:
       if (DEBUG) Serial.println("Start new game (Basic - Random)");
       gameMode = GAME_MODE_BASIC_RANDOM;
       resetButtonTimer_BasicRandom();
-      writeFile(LittleFS, LOG_NAME, "RANDOM\n");
+      resetLog();
       break;
     case 0:
     default:

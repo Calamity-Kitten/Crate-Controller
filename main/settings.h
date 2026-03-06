@@ -10,6 +10,7 @@
 
 #define PREFERENCES_NAMESPACE "crate"
 
+
 void initSettings();
 
 void loadSettings();

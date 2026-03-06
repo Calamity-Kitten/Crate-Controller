@@ -129,6 +129,10 @@ void updateDisplay_BasicStatic() {
   } else {
     display.printf("Next press:\n%21s\n", formatTime(nextPress - millis()));
   }
+  if (getLogIndex() >= 2) {
+    display.printf("Best time:\n%21s\n", formatTime(getLogMinTime()));
+    display.printf("Worst time:\n%21s\n", formatTime(getLogMaxTime()));
+  }
 }
 
 void updateDisplay_BasicRandom() {
@@ -138,6 +142,10 @@ void updateDisplay_BasicRandom() {
     display.printf("Live reaction:\n%21s\n", formatTime(millis() - nextPress));
   } else {
     display.printf("Next press:\n%21s\n", formatTime(nextPress - millis()));
+  }
+  if (getLogIndex() >= 2) {
+    display.printf("Best time:\n%21s\n", formatTime(getLogMinTime()));
+    display.printf("Worst time:\n%21s\n", formatTime(getLogMaxTime()));
   }
 }
 
