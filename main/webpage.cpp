@@ -156,6 +156,9 @@ void setHandlers() {
   server.on("/", HTTP_GET, [] (AsyncWebServerRequest *request) {
     request->send(LittleFS, "/settings.html", String(), false, processor);
   });
+  server.on(LOG_NAME, HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, LOG_NAME, String(), false, processor);
+  });
   server.on("/favicon.ico", HTTP_GET, [] (AsyncWebServerRequest *request) {
     request->send(LittleFS, "/favicon.ico");
   });

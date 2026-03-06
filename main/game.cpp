@@ -32,6 +32,7 @@ void updateGame_BasicStatic() {
   if (checkButton()) {
     clearButtonLED();
     //TODO: Log press
+    logPress(millis() - nextPress);
     resetButtonTimer_BasicStatic();
   }
 }
@@ -44,6 +45,7 @@ void updateGame_BasicRandom() {
   if (checkButton()) {
     clearButtonLED();
     // TODO: Log press
+    logPress(millis() - nextPress);
     resetButtonTimer_BasicRandom();
   }
 }
@@ -130,11 +132,13 @@ void setGameMode(unsigned char newGameMode) {
       if (DEBUG) Serial.println("Start new game (Basic - Static)");
       gameMode = GAME_MODE_BASIC_STATIC;
       resetButtonTimer_BasicStatic();
+      writeFile(LittleFS, LOG_NAME, "STATIC\n");
       break;
     case 2:
       if (DEBUG) Serial.println("Start new game (Basic - Random)");
       gameMode = GAME_MODE_BASIC_RANDOM;
       resetButtonTimer_BasicRandom();
+      writeFile(LittleFS, LOG_NAME, "RANDOM\n");
       break;
     case 0:
     default:
