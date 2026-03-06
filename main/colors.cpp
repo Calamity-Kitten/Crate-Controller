@@ -116,27 +116,9 @@ rgb getRainbowRGB() {
 
 void setButtonLED(rgb buttonColor) {
 
-  if ((unsigned int)(buttonColor.r * brightness) < MINIMUM_BRIGHTNESS) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.r: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.r, (unsigned int)(buttonColor.r * brightness));
-    buttonColor.r = 0.0;
-  } else if ((unsigned int)(buttonColor.r * brightness) > MAXIMUM_BRIGHTNESS) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.r: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.r, (unsigned int)(buttonColor.r * brightness));
-    buttonColor.r = 1.0;
-  }
-  if ((unsigned int)(buttonColor.g * brightness) < MINIMUM_BRIGHTNESS) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.g: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.g, (unsigned int)(buttonColor.g * brightness));
-    buttonColor.g = 0.0;
-  } else if ((unsigned int)(buttonColor.g * brightness) > MAXIMUM_BRIGHTNESS) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.g: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.g, (unsigned int)(buttonColor.g * brightness));
-    buttonColor.g = 1.0;
-  }
-  if ((unsigned int)(buttonColor.b * brightness) < MINIMUM_BRIGHTNESS) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.b: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.b, (unsigned int)(buttonColor.b * brightness));
-    buttonColor.b = 0.0;
-  } else if ((unsigned int)(buttonColor.b * brightness) > MAXIMUM_BRIGHTNESS) {
-    Serial.printf("ERROR: Invalid value (%s:%d buttonColor.b: %f, int: %d)\n", __FILE__, __LINE__, buttonColor.b, (unsigned int)(buttonColor.b * brightness));
-    buttonColor.b = 1.0;
-  }
+  constrain(buttonColor.r, 0.0, 1.0);
+  constrain(buttonColor.g, 0.0, 1.0);
+  constrain(buttonColor.b, 0.0, 1.0);
 
   ledcWriteChannel(0, (unsigned int)(buttonColor.r * brightness));
   ledcWriteChannel(1, (unsigned int)(buttonColor.g * brightness));
