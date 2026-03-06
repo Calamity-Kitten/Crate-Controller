@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <LittleFS.h>
 
 #include "button.h"
 #include "colors.h"
