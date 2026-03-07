@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Calamity Kitten's Crate Controller</title>
+
+	<!-- <style>div {opacity: 0;}</style> -->
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<script src="report.js" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+	<div class="header">
+		<h1>Calamity Kitten's Crate Controller</h1>
+	</div>
+	<div id="navbar">
+		<a class="navbarlinks">Status</a>
+		<a class="navbarlinks active" href="/">Report</a>
+		<a class="navbarlinks" href="/Settings">Settings</a>
+	</div>
+	<div class="content" id="report">
+		<canvas id="myChart"></canvas>
+
+		<div class="setting" id="chart-scale">
+			<label>Scale:</label>
+			<select id="chartScale">
+				<option value="1000">Seconds</option>
+				<option value="60000" selected>Minutes</option>
+				<option value="3600000">Hours</option>
+			</select>
+		</div>
+	</div>
+</body>
+</html>

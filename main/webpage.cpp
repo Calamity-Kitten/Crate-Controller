@@ -152,8 +152,19 @@ void setHandlers() {
     request->send(200, "text/plain", "Saved");
   });
 
+  server.on("^\\/GameLog\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    String output = "";
+    for (int i = 0; i < getLogIndex(); i++) {
+      output = output + String(getLog(i)) +"\n";
+    }
+    request->send(200, "text/plain", output);
+  });
+
   // TODO: Add processor() to send settings live rather than use JS
   server.on("/", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/report.html", String(), false, processor);
+  });
+  server.on("^\\/Settings\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
     request->send(LittleFS, "/settings.html", String(), false, processor);
   });
   server.on("/favicon.ico", HTTP_GET, [] (AsyncWebServerRequest *request) {
@@ -164,6 +175,9 @@ void setHandlers() {
   });
   server.on("/settings.js", HTTP_GET, [] (AsyncWebServerRequest *request) {
     request->send(LittleFS, "/settings.js");
+  });
+  server.on("/report.js", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/report.js");
   });
   
 }
