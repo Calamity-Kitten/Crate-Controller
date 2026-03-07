@@ -71,4 +71,5 @@ function updateHistogram() {
 }
 
 chartScale.addEventListener('input', updateHistogram);
+refreshChart.addEventListener('click', updateHistogram);
 drawHistogram();

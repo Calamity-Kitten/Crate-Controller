@@ -157,6 +157,7 @@ void setHandlers() {
     for (int i = 0; i < getLogIndex(); i++) {
       output = output + String(getLog(i)) +"\n";
     }
+    output.trim();
     request->send(200, "text/plain", output);
   });
 
