@@ -74,6 +74,15 @@ function onMessage(event) {
 	else staticTimeInput.parentElement.classList.add("diff");
 }
 
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
 // TODO: this shouldn't change slider values, but should change output value and add visual indicator
 function submitSettings() {
 	websocket.send(
@@ -84,7 +93,12 @@ function submitSettings() {
 				'MinimumTime' : minimumTimeInput.value,
 				'StaticTime' : staticTimeInput.value,
 				'GameMode' : gameModeInput.value,
-				'ColorMode' : colorModeInput.value
+				'ColorMode' : colorModeInput.value,
+				'Color' : [
+					hexToRgb(colorInput.value).r,
+					hexToRgb(colorInput.value).g,
+					hexToRgb(colorInput.value).b
+				]
 			}
 		)
 	);

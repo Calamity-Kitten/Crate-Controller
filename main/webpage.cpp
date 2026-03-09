@@ -64,7 +64,6 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     Serial.printf(" - %s:%s\n", kv.key().c_str(), String(kv.value()));
     if (strcmp(kv.key().c_str(), "Brightness") == 0) {
       setBrightness(constrain(kv.value(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS));
-      Serial.println("67: " + String(getBrightness()));
     } else if (strcmp(kv.key().c_str(), "MaximumTime") == 0) {
       setMaximumTime(constrain(kv.value(), MAXIMUM_TIME_MIN, MAXIMUM_TIME_MAX) * 60 * 1000);
     } else if (strcmp(kv.key().c_str(), "MinimumTime") == 0) {
@@ -75,6 +74,12 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
       setGameMode(constrain(kv.value(), MINIMUM_GAME_MODE, MAXIMUM_GAME_MODE));
     } else if (strcmp(kv.key().c_str(), "ColorMode") == 0) {
       setColorMode(constrain(kv.value(), MINIMUM_COLOR_MODE, MAXIMUM_COLOR_MODE));
+    } else if (strcmp(kv.key().c_str(), "Color") == 0) {
+      setStaticColor(
+        constrain((double)kv.value()[0] / 255.0, 0.0, 1.0),
+        constrain((double)kv.value()[1] / 255.0, 0.0, 1.0),
+        constrain((double)kv.value()[2] / 255.0, 0.0, 1.0)
+      );
     }
   }
   Serial.printf(" -- Brightness: %s | MaximumTime: %s\n", String(getBrightness()), String(getMaximumTime() / (60 * 1000)));
@@ -188,35 +193,27 @@ void setHandlers() {
 String processor(const String& var) {
   if(var == "MINIMUM_BRIGHTNESS") {
     return String(MINIMUM_BRIGHTNESS);
-  }
-  else if (var == "MAXIMUM_BRIGHTNESS") {
+  } else if (var == "MAXIMUM_BRIGHTNESS") {
     return String(MAXIMUM_BRIGHTNESS);
-  }
-  else if (var == "BRIGHTNESS") {
+  } else if (var == "BRIGHTNESS") {
     return String(getBrightness());
   } else if(var == "MINIMUM_TIME_MIN") {
     return String(MINIMUM_TIME_MIN / (60 * 1000));
-  }
-  else if (var == "MINIMUM_TIME_MAX") {
+  } else if (var == "MINIMUM_TIME_MAX") {
     return String(MINIMUM_TIME_MAX / (60 * 1000));
-  }
-  else if (var == "MINIMUM_TIME") {
+  } else if (var == "MINIMUM_TIME") {
     return String(getMinimumTime() / (60 * 1000));
   } else if(var == "MAXIMUM_TIME_MIN") {
     return String(MAXIMUM_TIME_MIN / (60 * 1000));
-  }
-  else if (var == "MAXIMUM_TIME_MAX") {
+  } else if (var == "MAXIMUM_TIME_MAX") {
     return String(MAXIMUM_TIME_MAX / (60 * 1000));
-  }
-  else if (var == "MAXIMUM_TIME") {
+  } else if (var == "MAXIMUM_TIME") {
     return String(getMaximumTime() / (60 * 1000));
   } else if(var == "STATIC_TIME_MIN") {
     return String(STATIC_TIME_MIN / (60 * 1000));
-  }
-  else if (var == "STATIC_TIME_MAX") {
+  } else if (var == "STATIC_TIME_MAX") {
     return String(STATIC_TIME_MAX / (60 * 1000));
-  }
-  else if (var == "STATIC_TIME") {
+  } else if (var == "STATIC_TIME") {
     return String(getStaticTime() / (60 * 1000));
   } else if (var == "GAMEMODE_0") {
     if (getGameMode() == 0) return "selected";
@@ -233,6 +230,12 @@ String processor(const String& var) {
   } else if (var == "COLORMODE_1") {
     if (getColorMode() == 1) return "selected";
     else return "";
+  } else if (var == "COLOR_RED") {
+    return String(getStaticColor().r * 255);
+  } else if (var == "COLOR_GREEN") {
+    return String(getStaticColor().g * 255);
+  } else if (var == "COLOR_BLUE") {
+    return String(getStaticColor().b * 255);
   }
   
   return String();
@@ -246,6 +249,10 @@ void notifyClients() {
   json["StaticTime"] = String(getStaticTime() / (60 * 1000));
   json["GameMode"] = String(getGameMode());
   json["ColorMode"] = String(getColorMode());
+  JsonArray color = json["Color"].to<JsonArray>();
+  color.add(String((int)(getStaticColor().r * 255)));
+  color.add(String((int)(getStaticColor().g * 255)));
+  color.add(String((int)(getStaticColor().b * 255)));
 
   char data[JSON_SIZE];
   size_t len = serializeJson(json, data);

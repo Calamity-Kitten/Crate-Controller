@@ -18,6 +18,9 @@
 #define DEFAULT_COLOR_MODE COLOR_MODE_RAINBOW
 #define MINIMUM_COLOR_MODE 0
 #define MAXIMUM_COLOR_MODE 1
+#define DEFAULT_COLOR_RED 245.0 / 255.0
+#define DEFAULT_COLOR_GREEN 169.0 / 255.0
+#define DEFAULT_COLOR_BLUE 184.0 / 255.0
 
 typedef struct {
   double r; // a fraction between 0 and 1
@@ -42,5 +45,7 @@ void setBrightness(unsigned int newBrightness);
 unsigned int getBrightness();
 unsigned char getColorMode();
 void setColorMode(unsigned char newColorMode);
+rgb getStaticColor();
+void setStaticColor(double newRed, double newGreen, double newBlue);
 
 #endif //colors_h

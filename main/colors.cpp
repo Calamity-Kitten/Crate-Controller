@@ -7,6 +7,7 @@
 static unsigned int brightness = DEFAULT_BRIGHTNESS;
 static int rainbowRate = DEFAULT_RAINBOW_RATE;
 static unsigned char colorMode = DEFAULT_COLOR_MODE;
+static rgb staticColor = {.r=DEFAULT_COLOR_RED, .g=DEFAULT_COLOR_GREEN, .b=DEFAULT_COLOR_BLUE};
 
 hsv rgb2hsv(rgb in) {
   hsv out;
@@ -119,7 +120,7 @@ void setButtonLED() {
   if (colorMode == COLOR_MODE_RAINBOW) {
     setButtonLED(getRainbowRGB());
   } else if (colorMode == COLOR_MODE_STATIC) {
-    setButtonLED({.r = 245.0/255.0, .g=169.0/255.0, .b=184.0/255.0});
+    setButtonLED(staticColor);
   }
 }
 
@@ -154,4 +155,12 @@ unsigned char getColorMode() {
 
 void setColorMode(unsigned char newColorMode) {
   colorMode = newColorMode;
+}
+
+rgb getStaticColor() {
+  return staticColor;
+}
+
+void setStaticColor(double newRed, double newGreen, double newBlue) {
+  staticColor = {.r=newRed, .g=newGreen, .b=newBlue};
 }
