@@ -129,9 +129,9 @@ void setButtonLED(rgb buttonColor) {
   constrain(buttonColor.g, 0.0, 1.0);
   constrain(buttonColor.b, 0.0, 1.0);
 
-  ledcWriteChannel(0, (unsigned int)(buttonColor.r * brightness));
-  ledcWriteChannel(1, (unsigned int)(buttonColor.g * brightness));
-  ledcWriteChannel(2, (unsigned int)(buttonColor.b * brightness));
+  ledcWriteChannel(0, (unsigned int)(buttonColor.r * pow(2, brightness)));
+  ledcWriteChannel(1, (unsigned int)(buttonColor.g * pow(2, brightness)));
+  ledcWriteChannel(2, (unsigned int)(buttonColor.b * pow(2, brightness)));
 }
 
 void clearButtonLED() {

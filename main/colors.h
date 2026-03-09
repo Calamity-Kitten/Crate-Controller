@@ -7,9 +7,9 @@
 #define PWM_RESOLUTION 16
 #define MAX_DUTY_CYCLE (unsigned int)(pow(2, PWM_RESOLUTION) - 1)
 
-#define DEFAULT_BRIGHTNESS 25 // scale of 0 to 255
-#define MINIMUM_BRIGHTNESS 0 // 25 for 8-bit, 20 for 12-bit, 10 for 16-bit
-#define MAXIMUM_BRIGHTNESS MAX_DUTY_CYCLE
+#define MINIMUM_BRIGHTNESS 5 // 25 for 8-bit, 20 for 12-bit, 10 for 16-bit
+#define MAXIMUM_BRIGHTNESS PWM_RESOLUTION
+#define DEFAULT_BRIGHTNESS 10
 
 #define DEFAULT_RAINBOW_RATE 50
 
