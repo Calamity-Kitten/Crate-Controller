@@ -73,6 +73,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
       setStaticTime(constrain(kv.value(), STATIC_TIME_MIN, STATIC_TIME_MAX) * 60 * 1000);
     } else if (strcmp(kv.key().c_str(), "GameMode") == 0) {
       setGameMode(constrain(kv.value(), MINIMUM_GAME_MODE, MAXIMUM_GAME_MODE));
+    } else if (strcmp(kv.key().c_str(), "ColorMode") == 0) {
+      setColorMode(constrain(kv.value(), MINIMUM_COLOR_MODE, MAXIMUM_COLOR_MODE));
     }
   }
   Serial.printf(" -- Brightness: %s | MaximumTime: %s\n", String(getBrightness()), String(getMaximumTime() / (60 * 1000)));
@@ -225,7 +227,14 @@ String processor(const String& var) {
   } else if (var == "GAMEMODE_2") {
     if (getGameMode() == 2) return "selected";
     else return "";
+  } else if (var == "COLORMODE_0") {
+    if (getColorMode() == 0) return "selected";
+    else return "";
+  } else if (var == "COLORMODE_1") {
+    if (getColorMode() == 1) return "selected";
+    else return "";
   }
+  
   return String();
 }
 
@@ -236,6 +245,7 @@ void notifyClients() {
   json["MinimumTime"] = String(getMinimumTime() / (60 * 1000));
   json["StaticTime"] = String(getStaticTime() / (60 * 1000));
   json["GameMode"] = String(getGameMode());
+  json["ColorMode"] = String(getColorMode());
 
   char data[JSON_SIZE];
   size_t len = serializeJson(json, data);

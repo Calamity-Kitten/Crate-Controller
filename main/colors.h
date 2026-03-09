@@ -13,6 +13,11 @@
 
 #define DEFAULT_RAINBOW_RATE 50
 
+#define COLOR_MODE_RAINBOW 0
+#define COLOR_MODE_STATIC 1
+#define DEFAULT_COLOR_MODE COLOR_MODE_RAINBOW
+#define MINIMUM_COLOR_MODE 0
+#define MAXIMUM_COLOR_MODE 1
 
 typedef struct {
   double r; // a fraction between 0 and 1
@@ -30,9 +35,12 @@ hsv rgb2hsv(rgb in);
 rgb hsv2rgb(hsv in);
 
 rgb getRainbowRGB();
+void setButtonLED();
 void setButtonLED(rgb buttonColor);
 void clearButtonLED();
 void setBrightness(unsigned int newBrightness);
 unsigned int getBrightness();
+unsigned char getColorMode();
+void setColorMode(unsigned char newColorMode);
 
 #endif //colors_h

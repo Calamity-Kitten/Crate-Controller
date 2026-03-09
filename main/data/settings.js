@@ -3,6 +3,7 @@ var varMinimumTimeInput = document.getElementById("minimumTimeInput");
 var varMaximumTimeInput = document.getElementById("maximumTimeInput");
 var varStaticTimeInput = document.getElementById("staticTimeInput");
 var varGameModeInput = document.getElementById("gameModeInput");
+var varColorModeInput = document.getElementById("colorModeInput");
 // var varSubmitButton = document.getElementById("submit");
 
 var gateway = `ws://${window.location.hostname}/ws`;
@@ -82,7 +83,8 @@ function submitSettings() {
 				'MaximumTime' : maximumTimeInput.value,
 				'MinimumTime' : minimumTimeInput.value,
 				'StaticTime' : staticTimeInput.value,
-				'GameMode' : gameModeInput.value
+				'GameMode' : gameModeInput.value,
+				'ColorMode' : colorModeInput.value
 			}
 		)
 	);

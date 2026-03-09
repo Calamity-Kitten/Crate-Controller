@@ -27,7 +27,7 @@ void updateGame() {
 void updateGame_BasicStatic() {
   if (millis() < nextPress) return;
 
-  setButtonLED({.r = 245.0/255.0, .g=169.0/255.0, .b=184.0/255.0});
+  setButtonLED();
   
   if (checkButton()) {
     clearButtonLED();
@@ -40,7 +40,7 @@ void updateGame_BasicStatic() {
 void updateGame_BasicRandom() {
   if (millis() < nextPress) return;
 
-  setButtonLED(getRainbowRGB());
+  setButtonLED();
 
   if (checkButton()) {
     clearButtonLED();

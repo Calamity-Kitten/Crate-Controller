@@ -13,6 +13,7 @@ void loadSettings() {
   setMinimumTime(preferences.getUInt("MinimumTime", DEFAULT_MINIMUM_TIME));
   setMaximumTime(preferences.getUInt("MaximumTime", DEFAULT_MAXIMUM_TIME));
   setStaticTime(preferences.getUInt("StaticTime", DEFAULT_STATIC_TIME));
+  setColorMode(preferences.getUChar("ColorMode", DEFAULT_COLOR_MODE));
   setGameMode(preferences.getUChar("GameMode", DEFAULT_GAME_MODE)); // This needs to be at the end or it runs on defaults rather than saved value
   initLog(
     preferences.getUInt("LogIndex", 0),
@@ -27,7 +28,7 @@ void loadSettings() {
 
 
   Serial.printf(
-    "Brightness: %d | GameMode: %d | MinTime: %d | MaxTime: %d | StaticTime: %d | LogIndex: %d | LogMinTime: %d | LogMaxTime: %d | ",
+    "Brightness: %d | GameMode: %d | MinTime: %d | MaxTime: %d | StaticTime: %d | LogIndex: %d | LogMinTime: %d | LogMaxTime: %d | ColorMode: %d | ",
     preferences.getUInt("Brightness", DEFAULT_BRIGHTNESS),
     preferences.getUChar("GameMode", DEFAULT_GAME_MODE),
     preferences.getUInt("MinimumTime", DEFAULT_MINIMUM_TIME),
@@ -35,7 +36,8 @@ void loadSettings() {
     preferences.getUInt("StaticTime", DEFAULT_STATIC_TIME),
     preferences.getUInt("LogIndex", 0),
     preferences.getUInt("LogMinTime", UINT_MAX),
-    preferences.getUInt("LogMaxTime", 0)
+    preferences.getUInt("LogMaxTime", 0),
+    preferences.getUChar("ColorMode", DEFAULT_COLOR_MODE)
   );
   for (int i = 0; i < LOG_SIZE; i++) {
     Serial.printf("%d, ", getLog(i));
@@ -53,6 +55,7 @@ void saveSettings() {
   preferences.putUInt("LogIndex", getLogIndex());
   preferences.putUInt("LogMinTime", getLogMinTime());
   preferences.putUInt("LogMaxTime", getLogMaxTime());
+  preferences.putUChar("ColorMode", getColorMode());
   
   Serial.print("NewArr: ");
   for (int i = 0; i < LOG_SIZE; i++) {
