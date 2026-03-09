@@ -108,67 +108,6 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
 }
 
 void setHandlers() {
-  server.on("^\\/Brightness\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    unsigned int newBrightness = constrain(request->pathArg(0).toInt(), MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS);
-    setBrightness(newBrightness);
-    request->send(200, "text/plain", String(getBrightness()));
-  });
-  server.on("^\\/Brightness\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-      request->send(200, "text/plain", String(getBrightness()));
-  });
-
-  //TODO: Limit max/min time so max is always higher than min. Possibly with JS on the webpage?
-  server.on("^\\/MaximumTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    unsigned int newMaximumTime = constrain(request->pathArg(0).toInt(), MAXIMUM_TIME_MIN, MAXIMUM_TIME_MAX);
-    setMaximumTime(newMaximumTime);
-    request->send(200, "text/plain", String(getMaximumTime()));
-  });
-  server.on("^\\/MaximumTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", String(getMaximumTime()));
-  });
-
-  server.on("^\\/MinimumTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    unsigned int newMinimumTime = constrain(request->pathArg(0).toInt(), MINIMUM_TIME_MIN, getMaximumTime());
-    setMinimumTime(newMinimumTime);
-    request->send(200, "text/plain", String(getMinimumTime()));
-  });
-  server.on("^\\/MinimumTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", String(getMinimumTime()));
-  });
-
-  server.on("^\\/StaticTime\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    unsigned int newStaticTime = constrain(request->pathArg(0).toInt(), STATIC_TIME_MIN, STATIC_TIME_MAX);
-    setStaticTime(newStaticTime);
-    request->send(200, "text/plain", String(getStaticTime()));
-  });
-  server.on("^\\/StaticTime\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", String(getStaticTime()));
-  });
-
-  server.on("^\\/GameMode\\/([0-9]+)\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    unsigned char newGameMode = constrain(request->pathArg(0).toInt(), MINIMUM_GAME_MODE, MAXIMUM_GAME_MODE);
-    setGameMode(newGameMode);
-    request->send(200, "text/plain", String(getGameMode()));
-  });
-  server.on("^\\/GameMode\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", String(getGameMode()));
-  });
-
-  server.on("^\\/SaveSettings\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    saveSettings();
-    request->send(200, "text/plain", "Saved");
-  });
-
-  server.on("^\\/GameLog\\/?$", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    String output = "";
-    for (int i = 0; i < getLogIndex(); i++) {
-      output = output + String(getLog(i)) +"\n";
-    }
-    output.trim();
-    request->send(200, "text/plain", output);
-  });
-
-  // TODO: Add processor() to send settings live rather than use JS
   server.on("/", HTTP_GET, [] (AsyncWebServerRequest *request) {
     request->send(LittleFS, "/report.html", String(), false, processor);
   });
