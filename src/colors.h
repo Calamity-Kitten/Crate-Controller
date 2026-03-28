@@ -34,13 +34,31 @@ typedef struct {
   double v; // a fraction between 0 and 1
 } hsv;
 
+// Takes `rgb` input, outputs `hsv` equivalent
+// Source - https://stackoverflow.com/a/6930407
+// Posted by David Hoerl, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-02-07, License - CC BY-SA 3.0
 hsv rgb2hsv(rgb in);
+
+// Takes `hsv` input, outputs `rgb` equivalent
+// Source - https://stackoverflow.com/a/6930407
+// Posted by David Hoerl, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-02-07, License - CC BY-SA 3.0
 rgb hsv2rgb(hsv in);
 
+// Returns `rgb` containing current RGB color for button LED ring
 rgb getRainbowRGB();
+
+// Sets button LED based on `colorMode` setting
 void setButtonLED();
+
+// Sets button LED ring to `buttonColor`
 void setButtonLED(rgb buttonColor);
+
+// Turns off button LED ring
 void clearButtonLED();
+
+
 void setBrightness(unsigned int newBrightness);
 unsigned int getBrightness();
 unsigned char getColorMode();

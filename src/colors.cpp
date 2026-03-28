@@ -1,9 +1,5 @@
 #include "colors.h"
 
-// Source - https://stackoverflow.com/a/6930407
-// Posted by David Hoerl, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-02-07, License - CC BY-SA 3.0
-
 static unsigned int brightness = DEFAULT_BRIGHTNESS;
 static int rainbowRate = DEFAULT_RAINBOW_RATE;
 static unsigned char colorMode = DEFAULT_COLOR_MODE;
@@ -139,7 +135,7 @@ void clearButtonLED() {
 }
 
 void setBrightness(unsigned int newBrightness) {
-  // no real need for sanity checking here since it's included in the setButtonLED function
+  // No need for sanity checking here since it's included in the setButtonLED function
   Serial.printf("Old: %d, Target: %d ", brightness, newBrightness);
   brightness = newBrightness;
   Serial.printf("New: %d\n", brightness);

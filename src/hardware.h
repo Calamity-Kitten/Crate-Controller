@@ -25,8 +25,10 @@
 #define SCREEN_HEIGHT 64
 #define OLED_RESET -1 // -1 = sharing uC reset pin
 
+// Set up GPIO pin operation and initialize Serial
 void initHardware();
 
+// Prints verbose description of reset reason
 void verbose_print_reset_reason(int reason);
 
 #endif // hardware_h
