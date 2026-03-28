@@ -27,7 +27,6 @@
 
 void initHardware();
 
-void toggleOutput(char outputPin);
 void verbose_print_reset_reason(int reason);
 
 #endif // hardware_h

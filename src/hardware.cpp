@@ -28,10 +28,6 @@ void initHardware() {
   }
 }
 
-void toggleOutput(char outputPin) {
-  digitalWrite(outputPin, !digitalRead(outputPin));
-}
-
 void verbose_print_reset_reason(int reason) {
   switch ( reason)
   {
