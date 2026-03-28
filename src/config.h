@@ -4,7 +4,6 @@
 #include "button.h"
 #include "colors.h"
 #include "display.h"
-#include "fileman.h"
 #include "hardware.h"
 #include "game.h"
 #include "logging.h"
