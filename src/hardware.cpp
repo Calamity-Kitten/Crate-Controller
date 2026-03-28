@@ -2,17 +2,9 @@
 
 void initHardware() {
   // Initialize outputs
-  // pinMode(RED_LED, OUTPUT);
-  // pinMode(GREEN_LED, OUTPUT);
-  // pinMode(BLUE_LED, OUTPUT);
   ledcAttachChannel(RED_LED, PWM_FREQ, PWM_RESOLUTION, 0);
   ledcAttachChannel(GREEN_LED, PWM_FREQ, PWM_RESOLUTION, 1);
   ledcAttachChannel(BLUE_LED, PWM_FREQ, PWM_RESOLUTION, 2);
-  
-  // Define outputs
-  digitalWrite(RED_LED, LED_OFF);
-  digitalWrite(RED_LED, LED_OFF);
-  digitalWrite(RED_LED, LED_OFF);
 
   // Initialize Inputs
   pinMode(BUTTON, INPUT_PULLUP);
