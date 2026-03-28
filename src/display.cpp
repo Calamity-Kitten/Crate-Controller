@@ -71,8 +71,6 @@ const unsigned char cKitty [] PROGMEM = {
 };
 
 void initDisplay() {
-  // Serial.begin(115200);
-
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { 
     Serial.println("SSD1306 allocation failed");
